@@ -1,0 +1,1 @@
+Rename-Computer -NewName Server16 -force -Confirm:$False
