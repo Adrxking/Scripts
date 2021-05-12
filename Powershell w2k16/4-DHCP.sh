@@ -3,7 +3,7 @@ clear
 # instalación de DHCP, su inclusión en DC y posterior eliminación del aviso "Autorizar"
 
 Install-WindowsFeature -name DHCP -IncludeManagementTools
-Add-DhcpServerInDC -DnsName server19.midominio.local -IPAddress 192.168.1.100
+Add-DhcpServerInDC -DnsName server16.midominio.local -IPAddress 192.168.1.100
 Set-ItemProperty –Path registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\ServerManager\Roles\12 –Name ConfigurationState –Value 2
 
 # ámbitos
@@ -18,7 +18,7 @@ Add-DhcpServerv4ExclusionRange -ScopeId 192.168.1.0 -StartRange 192.168.1.95 -En
 
 Set-DhcpServerv4Scope -ScopeId 192.168.1.0 -LeaseDuration 1.00:00:00
 
-Set-DHCPServerv4OptionValue -ScopeID 192.168.1.0 -DnsDomain server19.midominio.local -DnsServer 192.168.1.100 -Router 192.168.1.1
+Set-DHCPServerv4OptionValue -ScopeID 192.168.1.0 -DnsDomain server16.midominio.local -DnsServer 192.168.1.100 -Router 192.168.1.1
 
 # reiniciar servicio
 
