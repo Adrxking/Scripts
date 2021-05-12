@@ -1,6 +1,9 @@
 clear
 $DIR="c:"
 $ServerName="Server16"
+$ServerIp="192.168.1.100"
+$ServerGateway="192.168.1.1"
+
 write-host -backgroundcolor BLUE -foregroundcolor YELLOW "Configuración inicial. Implica REINICIO del Sistema cuando finalice. "
 echo " " 
 write-host -BackgroundColor MAGENTA "1.- Desactivación de Windows Defender. "
@@ -46,8 +49,8 @@ echo " "
 Set-ItemProperty -Path “HKLM:\SYSTEM\CurrentControlSet\services\Tcpip\Parameters\Interfaces\$((Get-NetAdapter -InterfaceIndex (Get-NetAdapter).InterfaceIndex ).InterfaceGuid)” -Name EnableDHCP -Value 0 -PassThru -Force -Confirm:$False > $null
 Remove-NetIpAddress -InterfaceIndex (Get-NetAdapter).InterfaceIndex -AddressFamily IPv4 -Confirm:$False -PassThru > $Null
 Remove-NetRoute -InterfaceIndex (Get-NetAdapter).InterfaceIndex -AddressFamily IPv4 -Confirm:$False -PassThru > $Null
-New-NetIpAddress -InterfaceIndex (Get-NetAdapter).InterfaceIndex -IpAddress 192.168.1.130 -PrefixLength 24 -DefaultGateway 192.168.1.1 -AddressFamily IPv4 -Confirm:$False > $Null
-Set-DnsClientServerAddress -InterfaceIndex (Get-NetAdapter).InterfaceIndex -ServerAddresses "192.168.1.130" > $Null
+New-NetIpAddress -InterfaceIndex (Get-NetAdapter).InterfaceIndex -IpAddress $ServerIp -PrefixLength 24 -DefaultGateway $ServerGateway -AddressFamily IPv4 -Confirm:$False > $Null
+Set-DnsClientServerAddress -InterfaceIndex (Get-NetAdapter).InterfaceIndex -ServerAddresses $ServerIp > $Null
 echo " " 
 write-host -foregroundcolor YELLOW -nonewline "    Hecho. " 
 echo " "
@@ -66,4 +69,5 @@ echo " "
 write-host -foregroundColor GREEN "    6.- Establecer Dirección IPv4 Estática."
 echo " "
 write-host -ForegroundColor Red "       Se procede al REINICIO DEL SISTEMA " -NoNewline
+Start-Sleep -Seconds 5
 restart-computer -Confirm:$False

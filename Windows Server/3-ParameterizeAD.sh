@@ -6,7 +6,8 @@ Remove-DnsServerZone -name midominio.local -force > $Null
 #Nuevas variables tras reinicio
 $dominioFQDN = "midominio.local"
 $dominioLDAP = ",DC=midominio,DC=local"
-
+$ServerIp="192.168.1.100"
+$ServerName="server16"
 
 #Habilitar la papelera de reciclaje
 Enable-ADOptionalFeature -Identity ("cn=Recycle Bin Feature,cn=Optional Features,CN=Directory Service,CN=Windows NT,CN=Services,CN=Configuration" + $dominioLDAP) -Scope ForestOrConfigurationSet -target $dominioFQDN -Confirm:$false
@@ -49,22 +50,22 @@ Update-DnsServerTrustPoint -force
 
 #Crear Registros y CNAMES
 Add-DnsServerResourceRecordA -IPv4Address 192.168.1.110 -name nr1 -ZoneName midominio.local -CreatePtr
-Add-DnsServerResourceRecordA -IPv4Address 192.168.1.130 -name server19 -ZoneName midominio.local -CreatePtr
+Add-DnsServerResourceRecordA -IPv4Address $ServerIp -name $ServerName -ZoneName midominio.local -CreatePtr
 Add-DnsServerResourceRecordCName -HostNameAlias www.midominio.local -Name ftp -ZoneName midominio.local
 Add-DnsServerResourceRecordCName -HostNameAlias www.google.es -Name google -ZoneName midominio.local
 
 #Cambiar propiedades de registro SOA
 $NuevoSOA = Get-DnsServerResourceRecord -ZoneName midominio.local -RRType SOA
 $AntiguoSOA = Get-DnsServerResourceRecord -ZoneName midominio.local -RRType SOA
-$NuevoSOA.Recorddata.primaryserver = "server19.midominio.local"
+$NuevoSOA.Recorddata.primaryserver = "server16.midominio.local"
 $NuevoSOA.RecordData.serialNumber = "2021050601" 
 set-dnsserverresourcerecord -NewInputObject $NuevoSOA -OldInputObject $AntiguoSOA -ZoneName midominio.local
 
 # Establecer reenviadores
-Add-DnsServerForwarder -IPAddress 8.8.8.8, 8.8.4.4, 1.1.1.1 -PassThru > $Null
+Add-DnsServerForwarder -IPAddress $ReenviaDNS1, $ReenviaDNS2, 1.1.1.1 -PassThru > $Null
 
 # Reestablecer dir DNS en IP del Servidor
-Set-DnsClientServerAddress -InterfaceIndex (Get-NetAdapter).InterfaceIndex -ServerAddresses "192.168.1.130"
+Set-DnsClientServerAddress -InterfaceIndex (Get-NetAdapter).InterfaceIndex -ServerAddresses $ServerIp
 
 #Forzar el registro del servidor en el DNS
 Register-DNSClient
