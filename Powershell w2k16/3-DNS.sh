@@ -17,9 +17,6 @@ $ReenviaDNS1 = "8.8.8.8"
 $ReenviaDNS2 = "8.8.4.4"
 $RedInversa = "192.168.1.0/24"
 
-#Configurar DNS
-Set-DNSServerForwarder -IPAddress $ReenviaDNS1,$ReenviaDNS2
-
 #Solo errores en el registro de DNS
 Set-DnsServerDiagnostics -EventLogLevel 1
 
@@ -50,6 +47,7 @@ Update-DnsServerTrustPoint -force
 
 #Crear Registros y CNAMES
 Add-DnsServerResourceRecordA -IPv4Address 192.168.1.110 -name nr1 -ZoneName midominio.local -CreatePtr
+Remove-DnsServerResourceRecord -ZoneName midominio.local -Name $ServerName -RRType A -Confirm:$false -Force
 Add-DnsServerResourceRecordA -IPv4Address $ServerIp -name $ServerName -ZoneName midominio.local -CreatePtr
 Add-DnsServerResourceRecordCName -HostNameAlias www.midominio.local -Name ftp -ZoneName midominio.local
 Add-DnsServerResourceRecordCName -HostNameAlias www.google.es -Name google -ZoneName midominio.local
