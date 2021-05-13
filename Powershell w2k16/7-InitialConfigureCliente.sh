@@ -1,5 +1,9 @@
 #-------CLIENTE-------#
 
+#Cambiar nombre al cliente
+$ServerName="win10"
+Rename-Computer -NewName $ServerName -force -Confirm:$False
+
 #Permitir el acceso remoto al no estar dentro del dominio.
 Get-NetConnectionProfile
 Enable-PSRemoting
