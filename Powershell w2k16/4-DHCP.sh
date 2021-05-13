@@ -8,7 +8,7 @@ Set-ItemProperty –Path registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\ServerM
 
 # ámbitos
 
-Add-DHCPServerv4Scope -Name “Miambito2” -StartRange 192.168.1.89 -EndRange 192.168.1.99 -SubnetMask 255.255.255.0 -State Active
+Add-DHCPServerv4Scope -Name “Miambito” -StartRange 192.168.1.89 -EndRange 192.168.1.99 -SubnetMask 255.255.255.0 -State Active
 
 # exclusiones
 
@@ -29,7 +29,7 @@ Restart-service dhcpserver
 Get-DhcpServerv4Scope | ft 
 
 #Instalar las management tools de DHCP
-#Install-WindowsFeature -Name RSAT-DHCP
+Install-WindowsFeature -Name RSAT-DHCP
 
 # Para eliminar un ámbito
 # Remove-DhcpServerv4Scope -ScopeId 192.168.1.0 -Verbose
