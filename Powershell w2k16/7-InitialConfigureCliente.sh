@@ -1,8 +1,10 @@
 #-------CLIENTE-------#
 
 #Cambiar nombre al cliente
-$ServerName="win10"
-Rename-Computer -NewName $ServerName -force -Confirm:$False
+$ClientName="win10"
+Rename-Computer -NewName $ClientName -force -Confirm:$False
+
+netsh interface ipv4 set address name="Ethernet0" static 192.168.1.101 255.255.255.0 
 
 #Permitir el acceso remoto al no estar dentro del dominio.
 Get-NetConnectionProfile
