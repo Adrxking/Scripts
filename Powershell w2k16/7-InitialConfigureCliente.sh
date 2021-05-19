@@ -36,7 +36,8 @@ clear
 
 
 Get-NetConnectionProfile
-Enable-PSRemoting
 Enable-PSRemoting -SkipNetworkProfileCheck
+
+Enter-PSSession -ComputerName server16
 
 Add-Computer -ComputerName win10 -LocalCredential Win10\usuario -DomainName midominio.local -Credential midominio\administrador -Restart
