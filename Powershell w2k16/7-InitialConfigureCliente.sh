@@ -7,13 +7,16 @@ Rename-Computer -NewName $ClientName -force -Confirm:$False
 Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled False
 
 netsh interface ipv4 set address name="Ethernet0" static 192.168.1.101 255.255.255.0 
-netsh interface ipv4 set dns "Local Area Connection" static 192.168.0.2
+netsh interface ipv4 set dns name="Ethernet0" static 192.168.1.100
 
 Set-NetConnectionProfile -InterfaceAlias Ethernet0 -NetworkCategory Private
 
 #Permitir el acceso remoto al no estar dentro del dominio.
 Get-NetConnectionProfile
 Enable-PSRemoting -SkipNetworkProfileCheck
+
+Start-Sleep -Seconds 7
+Restart-Computer
 
 #-------SERVIDOR-------#
 
