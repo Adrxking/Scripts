@@ -15,6 +15,8 @@ Set-NetConnectionProfile -InterfaceAlias Ethernet0 -NetworkCategory Private
 Get-NetConnectionProfile
 Enable-PSRemoting -SkipNetworkProfileCheck
 
+set-ExecutionPolicy Unrestricted -Confirm:$False -Force
+
 Start-Sleep -Seconds 7
 Restart-Computer
 
@@ -42,6 +44,8 @@ clear
 
 Get-NetConnectionProfile
 Enable-PSRemoting -SkipNetworkProfileCheck
+
+set-ExecutionPolicy Unrestricted
 
 Enter-PSSession -ComputerName server16
 
