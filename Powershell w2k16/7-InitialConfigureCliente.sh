@@ -5,12 +5,12 @@ $ClientName="win10"
 Rename-Computer -NewName $ClientName -force -Confirm:$False
 
 netsh interface ipv4 set address name="Ethernet0" static 192.168.1.101 255.255.255.0 
+netsh interface ipv4 set dns "Local Area Connection" static 192.168.0.2
 
 Set-NetConnectionProfile -InterfaceAlias Ethernet0 -NetworkCategory Private
 
 #Permitir el acceso remoto al no estar dentro del dominio.
-Get-NetConnectionProfile
-Enable-PSRemoting
+Get-NetConnectionProfilef
 Enable-PSRemoting -SkipNetworkProfileCheck
 
 #-------SERVIDOR-------#
