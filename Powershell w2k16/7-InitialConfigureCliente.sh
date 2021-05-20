@@ -4,6 +4,8 @@
 $ClientName="win10"
 Rename-Computer -NewName $ClientName -force -Confirm:$False
 
+Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled False
+
 netsh interface ipv4 set address name="Ethernet0" static 192.168.1.101 255.255.255.0 
 netsh interface ipv4 set dns "Local Area Connection" static 192.168.0.2
 
@@ -40,4 +42,4 @@ Enable-PSRemoting -SkipNetworkProfileCheck
 
 Enter-PSSession -ComputerName server16
 
-Add-Computer -ComputerName win10 -LocalCredential Win10\usuario -DomainName midominio.local -Credential midominio\administrador -Restart
+Add-Computer -ComputerName win10 -LocalCredential win10\adria -DomainName midominio.local -Credential midominio\Administrador -Restart
