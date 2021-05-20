@@ -10,7 +10,7 @@ netsh interface ipv4 set dns "Local Area Connection" static 192.168.0.2
 Set-NetConnectionProfile -InterfaceAlias Ethernet0 -NetworkCategory Private
 
 #Permitir el acceso remoto al no estar dentro del dominio.
-Get-NetConnectionProfilef
+Get-NetConnectionProfile
 Enable-PSRemoting -SkipNetworkProfileCheck
 
 #-------SERVIDOR-------#
