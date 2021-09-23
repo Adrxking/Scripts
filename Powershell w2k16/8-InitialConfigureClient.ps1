@@ -1,3 +1,5 @@
+#-------GUARDAR ESTE SCRIPT EN WINDOWS-----#
+
 clear
 $DIR="c:"
 
@@ -36,3 +38,6 @@ echo " "
 write-host -ForegroundColor Red "       Se procede al REINICIO DEL SISTEMA " -NoNewline
 Start-Sleep -Seconds 5
 restart-computer -Confirm:$False
+
+#------EJECUTAR DESDE EL SERVIDOR------#
+Invoke-Command -FilePath c:\scripts\conf.ps1 -ComputerName win10
