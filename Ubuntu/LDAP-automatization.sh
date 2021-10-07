@@ -15,6 +15,10 @@ apt install slapd ldap-utils -y
 ###################################################
 dpkg-reconfigure slapd
 
+#* LANZAR DESDE ESTE PUNTO *#
+
+#!/bin/bash
+
 ###################################################
 ######-----Comprobar que se ha instalado-----######
 ###################################################
@@ -33,19 +37,27 @@ echo dn: ou=usuarios,dc=ies,dc=local > /home/ldapPlantilla.ldif
 echo objectclass: organizationalUnit >> /home/ldapPlantilla.ldif
 echo ou: usuarios >> /home/ldapPlantilla.ldif
 
+echo '' >> /home/ldapPlantilla.ldif
+
 echo dn: ou=grupos,dc=ies,dc=local >> /home/ldapPlantilla.ldif
 echo objectclass: organizationalUnit >> /home/ldapPlantilla.ldif
 echo ou: grupos >> /home/ldapPlantilla.ldif
+
+echo '' >> /home/ldapPlantilla.ldif
 
 echo dn: cn=alumnos,ou=grupos,dc=ies,dc=local >> /home/ldapPlantilla.ldif
 echo objectclass: posixGroup >> /home/ldapPlantilla.ldif
 echo cn: alumnos >> /home/ldapPlantilla.ldif
 echo gidNumber: 5002 >> /home/ldapPlantilla.ldif
 
+echo '' >> /home/ldapPlantilla.ldif
+
 echo dn: cn=profesores,ou=grupos,dc=ies,dc=local >> /home/ldapPlantilla.ldif
 echo objectclass: posixGroup >> /home/ldapPlantilla.ldif
 echo cn: profesores >> /home/ldapPlantilla.ldif
 echo gidNumber: 5001 >> /home/ldapPlantilla.ldif
+
+echo '' >> /home/ldapPlantilla.ldif
 
 echo dn: uid=aresines,ou=usuarios,dc=ies,dc=local >> /home/ldapPlantilla.ldif
 echo objectClass: inetOrgPerson >> /home/ldapPlantilla.ldif
@@ -59,6 +71,8 @@ echo userPassword: usuario >> /home/ldapPlantilla.ldif
 echo loginShell: /bin/bash >> /home/ldapPlantilla.ldif
 echo homeDirectory: /home/aresines >> /home/ldapPlantilla.ldif 
 echo mail: aresines@ies.local >> /home/ldapPlantilla.ldif
+
+echo '' >> /home/ldapPlantilla.ldif
 
 echo dn: uid=pvega,ou=usuarios,dc=ies,dc=local >> /home/ldapPlantilla.ldif
 echo objectClass: inetOrgPerson >> /home/ldapPlantilla.ldif
