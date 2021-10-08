@@ -1,3 +1,5 @@
+#!/bin/bash
+
 ldapsearch -xLLL -b "dc=ies,dc=local" "(objectClass=Person)" mobile
 
 ldapsearch -xLLL -b "dc=ies,dc=local" "(uid=aresines)" homePhone mail
