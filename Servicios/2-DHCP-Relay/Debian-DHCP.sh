@@ -17,7 +17,7 @@ echo '' >> /etc/network/interfaces
 echo allow-hotplug ens33 >> /etc/network/interfaces
 echo iface ens33 inet static >> /etc/network/interfaces
 echo '' address 192.168.6.1/24 >> /etc/network/interfaces
-echo '' gateway 192.168.6.2/24 >> /etc/network/interfaces
+echo '' gateway 192.168.6.2 >> /etc/network/interfaces
 
 echo '' >> /etc/network/interfaces
 
