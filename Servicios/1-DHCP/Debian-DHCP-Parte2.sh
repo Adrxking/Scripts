@@ -23,17 +23,17 @@ echo max-lease-time 7200; >> /etc/dhcp/dhcpd.conf
 
 #####--------------LAN 10.33.6.0--------------#####
 echo subnet 10.33.6.0 netmask 255.255.255.0{ >> /etc/dhcp/dhcpd.conf 
-echo ' ' range 10.33.6.101 10.33.6.150; >> /etc/dhcp/dhcpd.conf 
-echo ' ' option routers 10.33.6.1; >> /etc/dhcp/dhcpd.conf 
-echo ' ' option domain-name-servers 8.8.8.8; >> /etc/dhcp/dhcpd.conf 
-echo }
+echo 'range 10.33.6.101 10.33.6.150;' >> /etc/dhcp/dhcpd.conf 
+echo 'option routers 10.33.6.1;' >> /etc/dhcp/dhcpd.conf 
+echo 'option domain-name-servers 8.8.8.8;' >> /etc/dhcp/dhcpd.conf 
+echo } >> /etc/dhcp/dhcpd.conf
 
 #####--------------LAN 191.16.6.0---------------#####
 echo subnet 191.16.6.0 netmask 255.255.255.0{ >> /etc/dhcp/dhcpd.conf 
-echo ' ' range 191.16.6.101 191.16.6.150; >> /etc/dhcp/dhcpd.conf 
-echo ' ' option routers 191.16.6.1; >> /etc/dhcp/dhcpd.conf 
-echo ' ' option domain-name-servers 8.8.4.4; >> /etc/dhcp/dhcpd.conf 
-echo }
+echo 'range 191.16.6.101 191.16.6.150;' >> /etc/dhcp/dhcpd.conf 
+echo 'option routers 191.16.6.1;' >> /etc/dhcp/dhcpd.conf 
+echo 'option domain-name-servers 8.8.4.4;' >> /etc/dhcp/dhcpd.conf 
+echo } >> /etc/dhcp/dhcpd.conf
 
 echo 'FIN DE LA CONFIGURACION EN /etc/dhcp/dhcpd.conf'
 
