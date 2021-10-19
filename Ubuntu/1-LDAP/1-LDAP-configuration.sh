@@ -15,15 +15,16 @@ apt install slapd ldap-utils -y
 ###################################################
 dpkg-reconfigure slapd
 
-#* LANZAR DESDE ESTE PUNTO *#
-
-#!/bin/bash
-
 ###################################################
 ######-----Comprobar que se ha instalado-----######
 ###################################################
 sudo service slapd status
 ldapsearch -x -LLL -b dc=ies,dc=local dn
+slapcat
+
+#* LANZAR DESDE ESTE PUNTO *#
+
+#!/bin/bash
 
 ###################################################
 ######-----Crear archivo plantillas-----###########
@@ -87,4 +88,4 @@ echo loginShell: /bin/bash >> /home/ldapPlantilla.ldif
 echo homeDirectory: /home/pvega >> /home/ldapPlantilla.ldif 
 echo mail: pvega@ies.local >> /home/ldapPlantilla.ldif
 
-ldapadd -x -W -D “cn=admin,dc=ies,dc=local” -f /home/ldapPlantilla.ldif 
+ldapadd -x -W -D 'cn=admin,dc=ies,dc=local' -f /home/ldapPlantilla.ldif 
