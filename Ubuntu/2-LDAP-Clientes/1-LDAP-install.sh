@@ -46,3 +46,31 @@ echo '' >> /etc/pam.d/common-password
 password        required                        pam_permit.so
 echo '' >> /etc/pam.d/common-password
 password        optional        pam_gnome_keyring.so >> /etc/pam.d/common-password
+
+###################################################
+####-------Configurar el common-session----------##
+###################################################
+echo 'session [default=1]      pam_permit.so' > /etc/pam.d/common-session
+
+echo '' >> /etc/pam.d/common-session
+
+echo 'session requisite        pam_deny.so' >> /etc/pam.d/common-session
+
+echo '' >> /etc/pam.d/common-session
+
+echo 'session required         pam_permit.so' >> /etc/pam.d/common-session
+
+echo '' >> /etc/pam.d/common-session
+
+echo 'session optional         pam_umask.so' >> /etc/pam.d/common-session
+
+echo '' >> /etc/pam.d/common-session
+
+echo 'session required        pam_unix.so' >> /etc/pam.d/common-session
+echo 'session optional        pam_ldap.so' >> /etc/pam.d/common-session
+echo 'session optional        pam_systemd.so' >> /etc/pam.d/common-session
+echo 'session optional        pam_mkhomedir.so' skel=/etc/skel umask=077 >> /etc/pam.d/common-session
+
+
+#Reiniciar el pc
+sudo shutdown -r now
