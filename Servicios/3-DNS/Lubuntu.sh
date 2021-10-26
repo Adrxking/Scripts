@@ -35,21 +35,21 @@ echo "router   IN  CNAME    ipfire.asir6."  >> /etc/bind/db.asir6 # CNAME quiere
 echo "debian   IN  A        10.33.6.2"      >> /etc/bind/db.asir6
 echo "ns1      IN  A        10.33.6.3"      >> /etc/bind/db.asir6
 echo "wserver  IN  A        10.33.6.4"      >> /etc/bind/db.asir6
-echo "@        IN  MX 10    debian.asir6."  >> /etc/bind/db.asir6 # MX es del mail y el 10 es la prioridad si hubiesen múltiples srevidores de correo
+echo "@        IN  MX 10    debian.asir6."  >> /etc/bind/db.asir6 # MX es del mail y el 10 es la prioridad, a menor número mayor prioridad
 echo "@        IN  MX 20    wserver.asir6." >> /etc/bind/db.asir6
 
 touch /etc/bind/db.10.33.6
 
 echo ";"                                               > /etc/bind/db.10.33.6 
-echo '"$TTL"    86400'                                 >> /etc/bind/db.10.33.6 # Tiempo en caché de las respuestas positivas
-echo "@     IN  SOA  ns1.asir6.  adrian.asir6.  ("     >> /etc/bind/db.10.33.6 # El primer parámetro lo creamos nosotros, el segundo parámetro es el contacto administrativo 
-echo "                       1   ; Serial"             >> /etc/bind/db.10.33.6 # Es la version
-echo "                  604800   ; Refresh"            >> /etc/bind/db.10.33.6 # Cada cuanto tiempo tienen que preguntar los servidores secundarios
-echo "                   86400   ; Retry"              >> /etc/bind/db.10.33.6 # Tiempo de reintento
-echo "                 2419200   ; Expire"             >> /etc/bind/db.10.33.6 # Tiempo en el que expira
-echo "                   86400 ) ; Negative Cache TTL" >> /etc/bind/db.10.33.6 # Tiempo en caché de las respuestas negativas
+echo '"$TTL"    86400'                                 >> /etc/bind/db.10.33.6
+echo "@     IN  SOA  ns1.asir6.  adrian.asir6.  ("     >> /etc/bind/db.10.33.6
+echo "                       1   ; Serial"             >> /etc/bind/db.10.33.6
+echo "                  604800   ; Refresh"            >> /etc/bind/db.10.33.6
+echo "                   86400   ; Retry"              >> /etc/bind/db.10.33.6 
+echo "                 2419200   ; Expire"             >> /etc/bind/db.10.33.6
+echo "                   86400 ) ; Negative Cache TTL" >> /etc/bind/db.10.33.6
 echo ";"                                               >> /etc/bind/db.10.33.6
-echo "@        IN  NS       ns1.asir6."     >> /etc/bind/db.10.33.6 # @ quiere decir "para esta zona"
+echo "@        IN  NS       ns1.asir6."     >> /etc/bind/db.10.33.6
 echo "1        IN  PTR      ipfire.asir6."  >> /etc/bind/db.10.33.6
 echo "1        IN  PTR      router.asir6."  >> /etc/bind/db.10.33.6 # Este es el CNAME
 echo "2        IN  PTR      debian.asir6."  >> /etc/bind/db.10.33.6

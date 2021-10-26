@@ -54,4 +54,7 @@ echo 'session optional        pam_ldap.so' >> /etc/pam.d/common-session
 echo 'session optional        pam_systemd.so' >> /etc/pam.d/common-session
 echo 'session optional        pam_mkhomedir.so' skel=/etc/skel umask=077 >> /etc/pam.d/common-session
 
+###################################################
+####-------Reiniciar y comprobar que funciona----##
+###################################################
 echo 'REINICIA EL PC'
