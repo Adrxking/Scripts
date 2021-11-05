@@ -61,3 +61,60 @@ else
 
 fi
 exit 0
+
+###################################################
+####----Comprobar detalles de un fichero----#######
+###################################################
+#!/bin/bash
+
+if [ $# -ne 1 ]
+then
+    echo "Introduce un solo parámetro"
+
+else
+
+    if [ ! -e $1 ]
+    then
+        echo "El fichero no existe"
+    else
+
+        if [ -r $1 ]
+        then
+            echo "El fichero $1 es regular"
+        else
+            echo "El fichero $1 no es regular"
+        fi
+    
+        if [ -s $1 ]
+        then
+            echo "El fichero $1 no está vacio"
+        else
+            echo "El fichero $1 está vacio"
+        fi
+
+        if [ -r $1 ]
+        then
+            echo "El fichero $1 es legible"
+        else
+            echo "El fichero $1 no es legible"
+        fi
+
+        if [ -x $1 ]
+        then
+            echo "El fichero $1 es ejecutable"
+        else
+            echo "El fichero $1 no es ejecutable"
+        fi
+
+        if [ -w $1 ]
+        then
+            echo "El fichero $1 es modificable"
+        else
+            echo "El fichero $1 no es modificable"
+        fi
+
+    fi
+fi
+
+
+
