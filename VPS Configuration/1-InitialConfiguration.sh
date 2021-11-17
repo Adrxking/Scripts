@@ -5,6 +5,7 @@
 ###################################################
 usuario=''
 dockerComposeVersion='1.29.2'
+puertoSSH='22022'
 
 ###################################################
 ######--------Configurate Users-------#############
@@ -15,6 +16,7 @@ usermod -a -G sudo $usuario
 
 ssh_config() {
     sed -i 's/PermitRootLogin yes/PermitRootLogin no/' /etc/ssh/sshd_config
+    sed -i "s/#Port 22/Port $puertoSSH/" /etc/ssh/sshd_config
     echo "" >> /etc/ssh/sshd_config
     echo "AllowUsers ${usuario}" >> /etc/ssh/sshd_config
     service ssh restart
@@ -39,3 +41,25 @@ install_docker() {
 
 install_docker
 
+###################################################
+#Comprobar intentos de inicio de sesión al logear#
+###################################################
+
+loggin_failures() {
+    mkdir /scripts
+    pathScript=/scripts/loggin_failures.sh
+    touch $pathScript
+    echo '#!/bin/bash' > $pathScript
+    echo 'intentos=`cat /var/log/auth* | grep failure | wc -l`' >> $pathScript
+    echo 'echo "se han realizado $intentos" intentos fallidos' >> $pathScript
+
+    chmod +x $pathScript
+
+    chmod 777 --recursive /var/log/
+
+    cp $pathScript /etc/profile.d/
+
+    bash $pathScript
+}
+
+loggin_failures
