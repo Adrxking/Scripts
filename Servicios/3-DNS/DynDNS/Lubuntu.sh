@@ -132,3 +132,45 @@ nsupdate -k /etc/bind/rndc.key
 ###################################################
 #####---INTERFACES POR LAS QUE ESCUCHA DHCP---#####
 ###################################################
+echo "INTERFACESv4=\"ens33\"" >  /etc/default/isc-dhcp-server
+echo "INTERFACESv6=\"\""      >> /etc/default/isc-dhcp-server
+
+
+###################################################
+#####-----CONFIGURACIÓN DHCP DEL SERVIDOR-----#####
+###################################################
+echo "key \"rndc-key\" {"                                                   >  /etc/dhcp/dhcpd.conf
+echo "	algorithm hmac-sha256;"                                             >> /etc/dhcp/dhcpd.conf
+echo "	secret \"S37TVrPE75L79ZE/a/iU8XSP8FdKecvXj5muzH9Bvjc=\";"           >> /etc/dhcp/dhcpd.conf
+echo "};"                                                                   >> /etc/dhcp/dhcpd.conf
+
+echo "server-identifier lubuntu.cicloasir.icv;"                             >> /etc/dhcp/dhcpd.conf
+echo "ddns-update-style interim;"                                           >> /etc/dhcp/dhcpd.conf
+echo "ddns-updates on;"                                                     >> /etc/dhcp/dhcpd.conf
+echo "ddns-domainname \"cicloasir.icv.\";"                                  >> /etc/dhcp/dhcpd.conf
+echo "ddns-rev-domainname \"in-addr.arpa.\";"                               >> /etc/dhcp/dhcpd.conf
+# Por si el cliente envía no solo su nombre
+# sino también el dominio (su fqdn)
+echo "ignore client-updates;"                                               >> /etc/dhcp/dhcpd.conf
+echo "authoritative;"                                                       >> /etc/dhcp/dhcpd.conf
+echo "option domain-name \"cicloasir.icv\";"                                >> /etc/dhcp/dhcpd.conf
+
+echo "ddns-hostname =  pick-first-value("                                   >> /etc/dhcp/dhcpd.conf
+echo "     option host-name,"                                               >> /etc/dhcp/dhcpd.conf
+echo "     concat(\"host-\",binary-to-ascii(10,8, \"-\", leased-address))"  >> /etc/dhcp/dhcpd.conf
+echo ");"                                                                   >> /etc/dhcp/dhcpd.conf
+
+echo "zone cicloasir.icv. {"                                                >> /etc/dhcp/dhcpd.conf
+echo "        primary 10.33.6.3;"                                           >> /etc/dhcp/dhcpd.conf
+echo "        key rndc-key;"                                                >> /etc/dhcp/dhcpd.conf
+echo "}"                                                                    >> /etc/dhcp/dhcpd.conf
+echo "zone 6.33.10.in-addr.arpa. {"                                         >> /etc/dhcp/dhcpd.conf
+echo "        primary 10.33.6.3;"                                           >> /etc/dhcp/dhcpd.conf
+echo "        key rndc-key;"                                                >> /etc/dhcp/dhcpd.conf
+echo "}"                                                                    >> /etc/dhcp/dhcpd.conf
+
+echo "subnet 10.33.6.0 netmask 255.255.255.0 {"                             >> /etc/dhcp/dhcpd.conf
+echo "        option domain-name-servers 10.33.6.3;"                        >> /etc/dhcp/dhcpd.conf
+echo "        option routers 10.33.6.1;"                                    >> /etc/dhcp/dhcpd.conf
+echo "        range 10.33.6.101 10.33.6.150;"                               >> /etc/dhcp/dhcpd.conf
+echo "}"                                                                    >> /etc/dhcp/dhcpd.conf
