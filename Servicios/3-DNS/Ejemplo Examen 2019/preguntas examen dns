@@ -1,0 +1,21 @@
+#Puerto 53, protocolo TCP
+
+#Contiene de todos los niveles de primer nivel contienen todos los servidores sobre los que estan delegados
+#ese dominio por ejemplo .es delegado en esta empresa y su server de nombres son estos.
+#Si existen copias, son 13 diferentes, todas las copias tienen la misma IP con el ANYCASTING ofreciendo el más cercano.
+
+#Recursiva: Aquella en la que se espera una respuesta completa, quiere decir --> Cuál es la IP de esta me diga es esta, no lo se o error.
+#Reiterativa: Aquella en la que se espera una respuesta parcial, quiere decir --> No lo sé pero aquí puedes preguntar
+
+#Zona de la que hemos solicitado información --> iescuravalera.es
+#Cuál es el servidor principal --> (IN NS) dns1.servidoresdns.net
+#Cuáles son los servidores autorizados --> (IN NS) dns1... dns2...
+#Cuál es su dirección IP: hacerle un host
+#Cada cuanto tiempo comprueban si hay cambios --> segundo parámetro del SOA
+#Para saber si es autorizado aparecería respuesta autoritativa con nslookup
+
+#nslookup
+#DNS --> set type=NS
+#aemet.es
+#Correo --> set type=MX
+#aemet.es
