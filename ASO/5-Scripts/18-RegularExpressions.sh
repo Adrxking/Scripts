@@ -29,12 +29,12 @@
 
 # * 8. Buscar en el archivo /etc/group los grupos con identificador comprendido entre 1000-1099 * #
 
-    --> egrep "[1][0][0-9][0-9]:" /etc/group # ! PREGUNTAR cómo acortar el rango de digitos a 4
+    --> egrep "10[0-9][0-9]:" /etc/group
 
 # * 9. Buscar en el archivo anterior todos los grupos cuyo indentificador comienza por 2 * #
 
     --> cut -d ":" -f 3 /etc/group | egrep "^2"
 
-# * 5. Buscar en el archivo anterior todos los grupos cuyo nombre comience por s y finalice por d* #
+# * 10. Buscar en el archivo anterior todos los grupos cuyo nombre comience por s y finalice por d* #
 
     --> cut -d ":" -f 1 /etc/group | egrep "^s.*d$"
