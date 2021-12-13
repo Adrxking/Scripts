@@ -1,0 +1,1 @@
+--> Ejemplo de servidor Ubuntu usando ProFTPD junto con FTPS generando nuestro certificado con OpenSSL.
