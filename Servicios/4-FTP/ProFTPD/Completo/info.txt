@@ -1,0 +1,7 @@
+Modo Pasivo
+FTPS explicito (requerido)
+Usuarios virtuales con una BBDD MySQL o María DB y confinados
+No se permite acceso anónimo
+Instalado detrás de un router IPFire
+
+--> 
