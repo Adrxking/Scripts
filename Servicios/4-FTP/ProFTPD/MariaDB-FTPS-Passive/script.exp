@@ -1,0 +1,59 @@
+#!/usr/bin/expect -f
+
+set force_conservative 0  ;# set to 1 to force conservative mode even if
+                          ;# script wasn't run conservatively originally
+if {$force_conservative} {
+        set send_slow {1 .1}
+        proc send {ignore arg} {
+                sleep .1
+                exp_send -s -- $arg
+        }
+}
+
+
+set timeout -1
+spawn openssl req -x509 -newkey rsa:2048 -keyout /etc/ssl/private/cert.key -out /etc/ssl/certs/cert.crt -nodes -days 365
+match_max 100000
+expect -exact "Generating a RSA private key\r
+....+++++\r
+...+++++\r
+writing new private key to '/etc/ssl/private/cert.key'\r
+-----\r
+You are about to be asked to enter information that will be incorporated\r
+into your certificate request.\r
+What you are about to enter is what is called a Distinguished Name or a DN.\r
+There are quite a few fields but you can leave some blank\r
+For some fields there will be a default value,\r
+If you enter '.', the field will be left blank.\r
+-----\r
+Country Name (2 letter code) \[AU\]:"
+send -- "EDS^?"
+expect -exact "^H ^H"
+send -- "^?"
+expect -exact "^H ^H"
+send -- "S\r"
+expect -exact "S\r
+State or Province Name (full name) \[Some-State\]:"
+send -- "Almeria\r"
+expect -exact "Almeria\r
+Locality Name (eg, city) \[\]:"
+send -- "H^?"
+expect -exact "^H ^H"
+send -- "Almeria\r"
+expect -exact "Almeria\r
+Organization Name (eg, company) \[Internet Widgits Pty Ltd\]:"
+send -- "AdrianStudio\r"
+expect -exact "AdrianStudio\r
+Organizational Unit Name (eg, section) \[\]:"
+send -- "AdrianStudio\r"
+expect -exact "AdrianStudio\r
+Common Name (e.g. server FQDN or YOUR name) \[\]:"
+send -- "AdrianStudio\r"
+expect -exact "AdrianStudio\r
+Email Address \[\]:"
+send -- "adir^?"
+expect -exact "^H ^H"
+send -- "^?"
+expect -exact "^H ^H"
+send -- "rianalbujaira@gmail.com\r"
+expect eof

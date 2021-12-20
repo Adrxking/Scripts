@@ -1,7 +1,7 @@
 create database ftp;
 
 
-grant select,insert,update,delete on ftp.* to proftpd@localhost identified by 'proftpd';
+grant select,insert,update,delete on ftp.* to 'proftpd'@'localhost' identified by 'proftpd';
 
 flush privileges;
 
@@ -25,4 +25,4 @@ create table ftpuser(
 
 insert into ftpgroup values('migrupo',2001,'pepe'); 
 
-insert into ftpuser values(1,'pepe','pepe',2001,2001,'/var/ftp/pepe');
+insert into ftpuser values(1,'pepe','pepe',2001,2001,'/var/ftp/pepe','/bin/false');
