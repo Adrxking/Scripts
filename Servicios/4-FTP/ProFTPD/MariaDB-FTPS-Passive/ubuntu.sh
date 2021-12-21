@@ -4,6 +4,7 @@
 # 3. Usuarios virtuales con una BBDD MySQL o María DB y confinados
 # 4. No se permite acceso anónimo
 # 5. Instalado detrás de un router IPFire
+# 6. Abrir rango de puertos en el IPFire con los puertos asignados para la forma pasiva
 
 #####################################
 ######----- INSTALACIONES -----######
@@ -21,7 +22,7 @@ sed -i "s/UseIPv6 on/UseIPv6 off/" /etc/proftpd/proftpd.conf
 #####################################
 sed -i "s/# PassivePorts 49152 65534/PassivePorts 49152 65534/" /etc/proftpd/proftpd.conf
 # ip de la pública de nuestro router (Tarjeta roja)
-sed -i "s/# MasqueradeAddress 1.2.3.4/MasqueradeAddress 192.168.7.206/" /etc/proftpd/proftpd.conf 
+#sed -i "s/# MasqueradeAddress 1.2.3.4/MasqueradeAddress 192.168.7.206/" /etc/proftpd/proftpd.conf 
 
 
 #####################################
@@ -43,6 +44,10 @@ echo "    TLSRenegotiate                      required off"                >> /e
 echo "</IfModule>"                                                         >> /etc/proftpd/tls.conf
 
 sed -i "s/#Include \/etc\/proftpd\/tls.conf/Include \/etc\/proftpd\/tls.conf/" /etc/proftpd/proftpd.conf
+sed -i "s/#LoadModule mod_tls_memcache.c/LoadModule mod_tls_memcache.c/" /etc/proftpd/modules.conf
+sed -i "s/#LoadModule mod_tls.c/LoadModule mod_tls.c/" /etc/proftpd/modules.conf
+sed -i "s/#LoadModule mod_tls_fscache.c/LoadModule mod_tls_fscache.c/" /etc/proftpd/modules.conf
+sed -i "s/#LoadModule mod_tls_shmcache.c/LoadModule mod_tls_shmcache.c/" /etc/proftpd/modules.conf
 
 #####################################
 ####--- 3. Usuarios virtuales ---####
