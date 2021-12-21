@@ -20,6 +20,9 @@ sed -i "s/UseIPv6 on/UseIPv6 off/" /etc/proftpd/proftpd.conf
 ######---- 1. MODO PASIVO -----######
 #####################################
 sed -i "s/# PassivePorts 49152 65534/PassivePorts 49152 65534/" /etc/proftpd/proftpd.conf
+# ip de la pública de nuestro router (Tarjeta roja)
+sed -i "s/# MasqueradeAddress 1.2.3.4/MasqueradeAddress 192.168.7.206/" /etc/proftpd/proftpd.conf 
+
 
 #####################################
 ######--- 2. FTPS explicito ---######
@@ -32,6 +35,7 @@ echo "    TLSLog                              /var/log/proftpd/tls.log"    >> /e
 echo "    TLSProtocol                         SSLv23"                      >> /etc/proftpd/tls.conf
 echo "    TLSRSACertificateFile               /etc/ssl/certs/cert.crt"     >> /etc/proftpd/tls.conf
 echo "    TLSRSACertificateKeyFile            /etc/ssl/private/cert.key"   >> /etc/proftpd/tls.conf
+echo "    TLSOptions                          NoSessionReuseRequired"      >> /etc/proftpd/tls.conf
 echo "    TLSOptions                          AllowClientRenegotiations"   >> /etc/proftpd/tls.conf
 echo "    TLSVerifyClient                     off"                         >> /etc/proftpd/tls.conf
 echo "    TLSRequired                         on"                          >> /etc/proftpd/tls.conf
