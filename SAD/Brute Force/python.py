@@ -1,6 +1,7 @@
 # Author: Adrianas Vitys
 # How to use this script:
-# 1. You just need to write a password that the script will try to crack
+# 1. Write a password the script will try to crack in the password constraint
+# 2. Write a the maximum characters the script will try to crack in the max_characters constraint
 
 # Import packages
 import string # string.printable contains all characters
@@ -8,7 +9,9 @@ import itertools # it helps to make bucles
 import os # it helps to clear the console
 
 # Declare constant with the password
-password = 'ab'
+password = 'abc'
+# Max characters of the password we wanna crack, if we put 4 then the max length will be 3
+max_characters=4 
 
 # Make a function that clear our console
 def clearConsole():
@@ -21,13 +24,13 @@ def clearConsole():
 clearConsole()
 
 flag=0
-for password_length in range(0, len(password)+1): # In range we have to put the length of the password we wanna crack
+for password_length in range(0, max_characters): # In range we have to put the length of the password we wanna crack
     for password_cracker in itertools.product(string.printable, repeat=password_length):
         password_cracker = ''.join(password_cracker)
         print(password_cracker)
         
         if password == password_cracker:
-            print("password is: " + password_cracker)
+            print("Got it! The password is: " + password_cracker)
             flag=1
             
             break;
@@ -35,4 +38,4 @@ for password_length in range(0, len(password)+1): # In range we have to put the 
         break;
         
 if flag==0:
-    print(f"The password you'r trying to crack is over {len(password)} characters, it's so difficult! :D")
+    print(f"The password you'r trying to crack is over {max_characters} characters, it's so difficult! :D")
