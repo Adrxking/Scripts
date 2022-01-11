@@ -1,0 +1,4 @@
+adrian1:general:El primer general
+adrian2:general:El segundo general
+adrian3:recluta:El primer recluta
+adrian4:recluta:El segundo recluta
