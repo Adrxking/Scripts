@@ -40,23 +40,24 @@ Options debe estar entre la etiqueta Directory. E.x.:
 ################################
 ##-- DIRECTORIOS VIRTUALES --###
 ################################
+# ! TENER EN CUENTA QUE A PARTIR DE UBUNTU 21 LAS CARPETAS /home/usuarios no tienen el permiso o+x
 # * Servir directorios virtuales con uso de alias
 → a2enmod alias --> Comando para habilitar el módulo alias.
 → a2dismod alias --> Comando para deshabilitar el módulo alias.
 
-Alias /midirectoriovirtual /home/adrian/html
-<Directory /home/adrian/html>
-Require all granted
-DirectoryIndex index.html
+Alias /midirectoriovirtual /home/usuario/html
+<Directory /home/usuario/html>
+    Require all granted
+    DirectoryIndex index.html
 </Directory>
 
 # * Servir directorios virtuales con uso de enlaces simbólicos
-→ ln -s /home/gines/documentos /var/www/gines/misdocumentos --> Comando para generar enlace simbólico.
+→ ln -s /home/usuario/html /var/www/html/midirectoriovirtual --> Comando para generar enlace simbólico.
 
-<Directory /var/www/gines/misdocumentos>
-DirectoryIndex index.html
-Options Indexes FollowSymLinks
-Require all granted
+<Directory /var/www/html/midirectoriovirtual>
+    Require all granted
+    DirectoryIndex index.html
+    Options Indexes FollowSymLinks
 </Directory>
 
 
@@ -65,15 +66,16 @@ Require all granted
 ################################
 # * Servir directorios personales de los usuarios:
 → a2enmod userdir
-→ mkdir /home/adrian/public_html
+→ mkdir /home/usuario/public_html
+→ nano /home/usuario/public_html/index.html
 
-→ http://IP/~adrian/index.html
+→ http://IP/~usuario/index.html
 
 ################################
 #- CAMBIAR PUERTOS DE ESCUCHA -#
 ################################
 # * Escuchar en otros puertos:
-Listen 8080 >> /etc/apache2/ports.conf
+echo "Listen 8080" >> /etc/apache2/ports.conf
 
 <VirtualHost 192.168.0.111:2020>
 DocumentRoot /var/www/maria
@@ -86,6 +88,56 @@ DocumentRoot /var/www/maria
 </VirtualHost>
 
 # * De esta última manera, este host virtual sería accesible por cualquier puerto que esté habilitado.
+
+Ex:
+#!/bin/bash
+mkdir /var/www/adrian
+echo "Soy adrian" > /var/www/adrian/index.html
+mkdir /var/www/pepe
+echo "Soy pepe" > /var/www/pepe/index.html
+mkdir /var/www/maria
+echo "Soy maria" > /var/www/maria/index.html
+
+# * En el site availables añadimos lo siguiente
+echo "<VirtualHost *:8081>"                             >  /etc/apache2/sites-available/adrian.conf
+echo "    DocumentRoot /var/www/adrian"                 >> /etc/apache2/sites-available/adrian.conf
+echo "</VirtualHost>"                                   >> /etc/apache2/sites-available/adrian.conf
+
+echo "<VirtualHost *:8082>"                             >  /etc/apache2/sites-available/pepe.conf
+echo "    DocumentRoot /var/www/pepe"                   >> /etc/apache2/sites-available/pepe.conf
+echo "</VirtualHost>"                                   >> /etc/apache2/sites-available/pepe.conf
+
+echo "<VirtualHost *:80>"                               >  /etc/apache2/sites-available/maria.conf
+echo "    DocumentRoot /var/www/maria"                  >> /etc/apache2/sites-available/maria.conf
+echo "</VirtualHost>"                                   >> /etc/apache2/sites-available/maria.conf
+
+a2ensite maria.conf
+a2ensite adrian.conf
+a2ensite pepe.conf
+
+service apache2 restart
+
+# * Añadir DNS
+apt install bind9 -y
+
+echo "zone \"icv\" {"                                         >  /etc/bind/named.conf.local
+echo "  type master;"                                         >> /etc/bind/named.conf.local
+echo "  file \"/etc/bind/db.icv\";"                           >> /etc/bind/named.conf.local
+echo "};"                                                     >> /etc/bind/named.conf.local
+
+echo ";"                                                      >  /etc/bind/db.icv
+echo '"$TTL"    86400'                                        >> /etc/bind/db.icv
+echo "@     IN  SOA  lubuntu.icv.  adrian.  ("                >> /etc/bind/db.icv
+echo "                             1   ;  Serial"             >> /etc/bind/db.icv
+echo "                        604800   ; Refresh"             >> /etc/bind/db.icv
+echo "                         86400   ; Retry"               >> /etc/bind/db.icv
+echo "                       2419200   ; Expire"              >> /etc/bind/db.icv
+echo "                         86400 ) ; Negative Cache TTL"  >> /etc/bind/db.icv
+echo ";"                                                      >> /etc/bind/db.icv
+echo "@            IN  NS   lubuntu.icv."                     >> /etc/bind/db.icv
+echo "lubuntu      IN  A    10.33.6.2"                        >> /etc/bind/db.icv
+echo "www.maria    IN  A    10.33.6.2"                        >> /etc/bind/db.icv
+echo "www.pepe     IN  A    10.33.6.22"                       >> /etc/bind/db.icv
 
 ################################
 ##-- DIRECTORIOS PERSONALES --##
