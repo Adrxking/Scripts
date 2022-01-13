@@ -2,7 +2,7 @@
 
 # * El script debe recibir como parámetro el nombre del archivo y debe comprobar que el archivo existe. ✓
 
-# * En el archivo debe aparecer en cada línea el usuario, un carácter de dos puntos para separar.
+# * En el archivo debe aparecer un carácter de dos puntos para separar los campos.
 # * los campos son: Nombre, Grupo primario y Comentario (Ejemplo: pepe:users:Usuario pepe). ✓
 
 # * Si la carpeta personal del usuario no existe se debe crear. ✓

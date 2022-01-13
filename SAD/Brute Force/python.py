@@ -9,9 +9,9 @@ import itertools # it helps to make bucles
 import os # it helps to clear the console
 
 # Declare constant with the password
-password = 'abc'
+password = 'abccccs'
 # Max characters of the password we wanna crack, if we put 4 then the max length will be 3
-max_characters=4 
+max_characters=2
 
 # Make a function that clear our console
 def clearConsole():
