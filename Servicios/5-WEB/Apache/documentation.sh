@@ -126,7 +126,7 @@ echo "  file \"/etc/bind/db.icv\";"                           >> /etc/bind/named
 echo "};"                                                     >> /etc/bind/named.conf.local
 
 echo ";"                                                      >  /etc/bind/db.icv
-echo '"$TTL"    86400'                                        >> /etc/bind/db.icv
+echo '$TTL    86400'                                          >> /etc/bind/db.icv
 echo "@     IN  SOA  lubuntu.icv.  adrian.  ("                >> /etc/bind/db.icv
 echo "                             1   ;  Serial"             >> /etc/bind/db.icv
 echo "                        604800   ; Refresh"             >> /etc/bind/db.icv
@@ -140,5 +140,105 @@ echo "www.maria    IN  A    10.33.6.2"                        >> /etc/bind/db.ic
 echo "www.pepe     IN  A    10.33.6.22"                       >> /etc/bind/db.icv
 
 ################################
-##-- DIRECTORIOS PERSONALES --##
+####--- Cambio de Idioma ----###
 ################################
+# * Visualizar el contenido de la web en un idioma u otro dependiendo del idioma del navegador del cliente
+#!bin/bash
+mkdir /var/www/html/prueba
+
+echo "Esta es la prueba en castellano" > /var/www/html/prueba/index.html.es
+echo "Esta es la prueba en ingles" > /var/www/html/prueba/index.html.en
+echo "Esta es la prueba en frances" > /var/www/html/prueba/index.html.fr
+
+# En 000-default:
+<Directory /var/www/html/prueba>
+    DirectoryIndex index.html
+    Options MultiViews FollowSymLinks
+</Directory>
+
+# Comando:
+a2ensite 000-default.conf
+
+# apachectl -t : Comprobar sintaxis
+
+######
+###-- RESOLUCION POR NOMBRES
+######
+
+# * En el site availables añadimos lo siguiente
+echo "<VirtualHost *:80>"                               >  /etc/apache2/sites-available/adrian.conf
+echo "    ServerName www.adrian.icv"                    >> /etc/apache2/sites-available/adrian.conf
+echo "    DocumentRoot /var/www/adrian"                 >> /etc/apache2/sites-available/adrian.conf
+echo "</VirtualHost>"                                   >> /etc/apache2/sites-available/adrian.conf
+
+echo "<VirtualHost *:80>"                               >  /etc/apache2/sites-available/pepe.conf
+echo "    ServerName www.pepe.icv"                      >> /etc/apache2/sites-available/pepe.conf
+echo "    DocumentRoot /var/www/pepe"                   >> /etc/apache2/sites-available/pepe.conf
+echo "</VirtualHost>"                                   >> /etc/apache2/sites-available/pepe.conf
+
+echo "<VirtualHost *:80>"                               >  /etc/apache2/sites-available/maria.conf
+echo "    ServerName www.maria.icv"                     >> /etc/apache2/sites-available/maria.conf
+echo "    DocumentRoot /var/www/maria"                  >> /etc/apache2/sites-available/maria.conf
+echo "</VirtualHost>"                                   >> /etc/apache2/sites-available/maria.conf
+
+################################
+####--- Control De Acceso ---###
+################################
+# * módulos importantes: mod_authz_core y mod_authz_host
+- Require: Comprueba si un usuario autentificado está autorizado
+    -> Require all granted: acceso permitido sin condiciones
+    -> Require all denied: acceso denegado sin condiciones
+    -> Require user userid [userid]: sólo los usuarios citados pueden acceder.
+    -> Require group group-id [group-id]: sólo los usuarios pertenecientes a los grupos
+    citados pueden acceder.
+    -> Require ip 10 172.20 192.168.2 10.33.13.44: los clientes de los rangos especificados
+    pueden acceder.
+    -> Require valid-user: cualquier usuario válido puede acceder.
+    -> Require host: sólo el FQDN citado puede acceder. Se pueden citar varios.
+
+# * Está permitido el uso de not para negar una condición. (Require not ip 10.33.13.22)
+Ex:
+
+#!/bin/bash
+mkdir /var/www/html/restringido
+echo "Directorio restringido" > /var/www/html/restringido/index.html
+
+# Añadir en 000-default:
+<Directory /var/www/html/restringido>
+    <RequireAny> # Que se cumpla alguna regla
+        Require ip 10.33.6.99 # Permitir acceso solo desde esta IP
+        Require ip 10.33.6.0/24 # Permitir acceso solo desde red
+        Require ip 127.0.0.7 # Permitir acceso solo desde esta IP local
+    </RequireAny>
+</Directory>
+
+
+################################
+#####---- AUTENTICACIÓN ----####
+################################
+<Directory /var/www/html/restringido>
+    AuthType Basic
+    AuthName "Se require autenticación"
+    AuthUserFile "/etc/apache2/usuarios"
+    Require user usuario
+</Directory>
+
+# Comandos
+# * Crear un archivo con el usuario
+htpasswd -c /etc/apache2/usuarios juan
+
+# ! Autenticacion con digest
+# Comandos
+a2enmod auth_digest
+
+htdigest -c /etc/apache2/usuarios_digest grupo1 usuario1
+htdigest /etc/apache2/usuarios_digest grupo1 usuario2
+htdigest /etc/apache2/usuarios_digest grupo2 usuario3
+
+#000-default
+<Directory /var/www/html/restringido>
+    AuthType Basic
+    AuthName "Se require autenticación"
+    AuthUserFile "/etc/apache2/usuarios_digest"
+    Require user usuario
+</Directory>

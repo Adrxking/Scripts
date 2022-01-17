@@ -99,7 +99,7 @@ Cuerpo del mensaje (opcional). Queda determinado por el tipo de recursos solicit
     - 403 "Forbidden"
     - 404 "Not found"
 
---> 500-599
+--> 500-599 (Errores del servidor)
     - 500 "Internal Server Error"
     - 503 "Service Unavailable"
 
