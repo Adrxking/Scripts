@@ -1,7 +1,7 @@
 # ! --> Script con Menú para importar o exportar usuarios usando 2 scripts externos
 
-# * El script debe preguntar si queremos importar o 
-# * exportar los usuarios y ejecutar el script pertinente. ✓
+# * El script debe preguntar si queremos crear un backup
+# * o restaurar ciertos usuarios. ✓
 
 #!/bin/bash
 
@@ -10,8 +10,8 @@ clear
 
 # Función que muestra las opciones del menú
 getOptions() {
-    echo "1) Importar usuarios"
-    echo "2) Exportar usuarios"
+    echo "1) Backup usuarios"
+    echo "2) Restaurar usuarios"
     echo "3) Salir"
 }
 
