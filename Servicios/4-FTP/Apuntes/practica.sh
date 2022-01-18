@@ -26,6 +26,3 @@
     2.7. Usuarios soldado1 y soldado2 pertenecientes al grupo soldados con sus directorios personales 
     debajo de C:\adrian\soldados con permisos totales
     2.8. Velocidad de subida para soldados 5Kb/s
-
-3. 
-#!/bin/bash

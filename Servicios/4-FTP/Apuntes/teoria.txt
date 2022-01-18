@@ -1,0 +1,76 @@
+1. Indica los puertos y protocolos del servicio FTP diferenciando los modos activo y pasivo.
+    --> Por defecto usa los puertos 20 y 21.
+    
+    --> En el modo activo el cliente intenta establecer la conexion mediante un canal de control, desde cualquier
+    puerto del cliente hasta el puerto 21 del servidor. Tras ello el servidor crea el canal de datos desde el puerto
+    20 hasta el puerto indicado por el cliente.
+
+    --> En el modo pasivo el cliente intenta establecer la conexion mediante un canal de control, desde cualquier
+    puerto del cliente hasta el puerto 21 del servidor. Una vez creado el canal de control el cliente solicita un
+    puerto al servidor y es el cliente el que crea el canal de datos.
+
+2. Para que se utiliza FTP ALG?
+    --> Algoritmo implementado en algunos routers para que no sea imprescindible usar el modo pasivo. 
+
+3. Para que se utiliza la conexion de control y la de datos
+    --> Control: Abra la conexion entre el servidor y el cliente.
+    --> Datos: Transfiere los datos del servidor al cliente y viceversa.
+
+4. FTPs, SFTP, TFTP
+    --> FTPs es el protocolo FTP + SSL, puertos 990 (control) y 989 (datos)
+        --> FTPs implícito: No hay negociación entre cliente y servidor. Cliente inicia sesión en modo seguro, 
+        si el server no lo soporta se cierra sesión.
+        
+        --> FTPs explícito: Negociación entre cliente y servidor. Cliente inicia sesión en el puerto 21 y 
+        solicita modo seguro, si el servidor no lo soporta se ofrece al cliente el modo no seguro.
+
+    --> SFTP es el protocol SSH + FTP, puerto 22.
+
+    --> TFTP utiliza el UDP como modo de transporte por lo que se usa para transferir archivos entre 
+equipos interconectados.
+
+5. Usuarios locales vs virtuales. Que son los usuarios confinados
+    --> Los locales son usuarios creados en el sistema mientras que los virtuales no estan en el sistema operativo
+    sino que estan por ejemplo en una base de datos.
+    --> Son los usuarios que no pueden salir de su directorio asignado hacia la raiz
+
+* APUNTES EXTRA * 
+
+COMANDOS FTP CLIENTE MODO TEXTO:
+------------------------------------------------------------------------------------------
+- open --> Inicia una conexión con un servidor ftp. Ejemplo: open ftp.iescuravalera.es
+- close o dicconnect --> Finaliza la conexión con el servidor.
+- bye o quit --> Finaliza la conexión con el servidor y la sesión en el cliente.
+- cd directorio --> Cambia el directorio de trabajo en el servidor.
+- delete archivo --> Borra un archivo en el servidor.
+- mdelete patrón --> Borra múltiples archivos en base a un patrón.
+- dir --> Muestra el contenido del directorio en el servidor.
+- get archivo --> Ordena la recepción (bajada) de archivos
+- mget archivos --> Recibe múltiples archivos
+- hash --> Activa la visualización de caracteres “#” para indicar el progreso de la transferencia
+de archivos
+- lcd --> directorio Cambia el directorio de trabajo en el equipo local
+- ls --> Muestra el contenido del directorio en el servidor
+- prompt --> Activa/desactiva la confirmación de la ejecución de comandos por parte del 
+usuario. Por ejemplo al usar mdelete
+- put archivo --> Ordena el envío (subida) de un archivo
+- mput archivos --> Ordena el envío de múltiples archivos
+- pwd --> Muestra el directorio de trabajo en el servidor
+- rename archivo --> Cambia el nombre de un archivo en el servidor
+- rmdir --> directorio Borra un directorio vacío en el servidor
+- status --> Muestra el estado actual de la conexión
+- bin o binary --> Activa el modo de transferencia binario
+- ascii --> Activa el modo de transferencia texto
+- help comando --> Muestra información de un comando
+- append fichero --> Continua con la descarga de un archivo que se ha cortado previamente
+- glob --> Activa/desactiva la visualización de nombres largos para los archivos
+- mkdir --> directorio Crea un directorio en el servidor
+- quote --> Permite ejecutar un comando en el servidor
+- send --> Igual que put
+- chmod fichero --> Cambia los permisos de un fichero
+- cdup --> Cambia el directorio actual al padre de aquel en el que estemos
+- user --> Cambiar de usuario sin cortar la conexión
+- passive --> Activa/desactiva el modo pasivo
+- verbose --> Activa/desactiva el modo “verboso” que visualiza información del estado de las
+operaciones que se realizan.
+----------------------------------------------------------------------------------------------

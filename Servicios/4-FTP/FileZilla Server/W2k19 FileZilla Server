@@ -1,23 +1,8 @@
-# * Máximo 2 conexiones simultánes * #
-1. Administration interface -> Server -> Configure
-
-# * 1 minuto tiempo inactividad máximo * #
-2. Administration interface -> Server -> Configure -> Timeouts -> Login Timeout -> 60s
-
-# * Mensaje de bienvenida * #
-3. Administration interface -> Server -> Configure -> Timeouts -> Login Timeout -> 60s
-
-# * Máximo 10KB de bajada máxima L-V * #
-4. Administration interface -> Server -> Configure -> Logging -> Login Timeout -> 60s
-
 # * Se banean 2 horas las direcciones que intenten autenticarse 10 veces * #
-5. Administration interface -> Server -> Configure -> Autoban -> Ban IP address after -> 10
-
-# * Crear usuarios * #
-
+1. Administration interface -> Server -> Configure -> Autoban -> Ban IP address after -> 10
 
 # * Habilitar puerto 21 firewall windows * #
-7. Permitir una aplicación a través del firewall de windows -> Permitir otra app -> Examinar -> 
+2. Permitir una aplicación a través del firewall de windows -> Permitir otra app -> Examinar -> 
 C:\Program Files\FileZilla Server\filezilla-server.exe -> pública y privada
 
 
