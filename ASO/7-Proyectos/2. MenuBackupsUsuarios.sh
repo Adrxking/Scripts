@@ -29,18 +29,17 @@ clear
     # Comprobar que ha introducido el usuario
     case ${option} in
         1)
-            # Si el usuario introduce la opción 1 le pedimos que introduzca un archivo de importación
-            read -p "Introduce un archivo de importacion de usuarios --> " import
-            # Comprobamos que el archivo de importación existe
-            if [ -f $import ]; then
-                bash import.sh $import
-            else
-                echo "El archivo de importacion no existe"
-            fi
+            # Si el usuario introduce la opción 1 le pedimos que introduzca los usuarios
+            read -p "Introduce los nombres de los usuarios separados por espacio --> " users
+            
+            bash backup.sh $users
+            
         ;;
         2)
-            # Si el usuario introduce la opción 2 creamos un archivo con los usuarios del sistema y su grupo
-            bash export.sh
+            # Si el usuario introduce la opción 2 le pedimos que introduzca la ruta del backup y los usuarios que restaurar
+            read -p "Introduce la ruta de los backup y los nombres de los usuarios separados por espacio --> " recover
+
+            bash recovery.sh $recover
         ;;
         *)
             # En caso de q el usuario introduzca una opción no válida se mostrará lo siguiente

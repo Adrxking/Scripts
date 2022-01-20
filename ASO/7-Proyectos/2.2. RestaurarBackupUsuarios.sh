@@ -39,7 +39,7 @@ do
     fi
 
     # Comprobar si ya existe algun home para ese usuario, si no existe lo creamos desde el backup, si existe
-    # pedimos al usuario que nos introduzca si quiere sustiruir el recovery por el home actual
+    # pedimos al usuario que nos introduzca si quiere sustiuir el home del backup por el home actual
     if [ -d /home/$user ]; then
         flag=0
         until [[ ${flag} == 1 ]]
