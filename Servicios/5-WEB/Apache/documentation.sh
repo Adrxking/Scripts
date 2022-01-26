@@ -2,8 +2,8 @@
 ##- ARCHIVOS DE CONFIGURACIÓN -#
 ################################
 /etc/apache2/apache2.conf → Archivo de configuración por defecto
-/etc/apache2/conf-available --> Diferentes configuraciones que podemos crear como plantillas de configuración
-/etc/apache2/conf-enabled --> Habilitar configuraciones que hemos creado en el conf-available
+/etc/apache2/conf-available -> Diferentes configuraciones que podemos crear como plantillas de configuración
+/etc/apache2/conf-enabled -> Habilitar configuraciones que hemos creado en el conf-available
 /etc/apache2/mods-available → Módulos instalados
 /etc/apache2/mods-enabled → Módulos habilitados
 /etc/apache2/sites-available → Servidores virtuales definidos
@@ -16,19 +16,19 @@
 ###-- CONFIGURACIÓN BÁSICA --###
 ################################
 # * Estas directivas las podemos añadir en los VirtualHost (/etc/apache2/sites-available/...)
-ErrorLog /var/log/apache2/error.log --> Para indicar el fichero de registro de errores.
-CustomLog /var/log/apache2/Access.log combined --> Para indicar el fichero de registro de accesos.
-LogFormat --> Para indicar el formato de los registros.
-ErrorDocument 404 /no_encontrada.html --> Página de errores personalizada
-ErrorDocument 404 "no se ha podido encontrar" --> Página de errores personalizada
+ErrorLog /var/log/apache2/error.log -> Para indicar el fichero de registro de errores.
+CustomLog /var/log/apache2/Access.log combined -> Para indicar el fichero de registro de accesos.
+LogFormat -> Para indicar el formato de los registros.
+ErrorDocument 404 /no_encontrada.html -> Página de errores personalizada
+ErrorDocument 404 "no se ha podido encontrar" -> Página de errores personalizada
 
 # * Opciones dentro de la directiva Directory
 DirectoryIndex index.html index.php index.asp --> Ficheros a servir por defecto
 Options Indexes FollowSymLinks Multiviews --> Opciones sobre directorios
-    - Indexes --> Si no encuentra el archivo por defecto se mostrará la jerarquía de archivos en el navegador.
-    - FollowSymLinks --> Para que se puedan seguir enlaces simbólicos
-    - Multiviews --> Para poder ver diferentes vistas de un mismo archivo
-Require all granted --> Dar permisos a apache.
+    - Indexes -> Si no encuentra el archivo por defecto se mostrará la jerarquía de archivos en el navegador.
+    - FollowSymLinks -> Para que se puedan seguir enlaces simbólicos
+    - Multiviews -> Para poder ver diferentes vistas de un mismo archivo
+Require all granted -> Dar permisos a apache.
 
 Options debe estar entre la etiqueta Directory. E.x.:
 <Directory /var/www/html>
@@ -78,13 +78,13 @@ Alias /midirectoriovirtual /home/usuario/html
 echo "Listen 8080" >> /etc/apache2/ports.conf
 
 <VirtualHost 192.168.0.111:2020>
-DocumentRoot /var/www/maria
+    DocumentRoot /var/www/maria
 </VirtualHost>
 
 O bien:
 
 <VirtualHost 192.168.0.111>
-DocumentRoot /var/www/maria
+    DocumentRoot /var/www/maria
 </VirtualHost>
 
 # * De esta última manera, este host virtual sería accesible por cualquier puerto que esté habilitado.
@@ -92,13 +92,14 @@ DocumentRoot /var/www/maria
 Ex:
 #!/bin/bash
 mkdir /var/www/adrian
-echo "Soy adrian" > /var/www/adrian/index.html
 mkdir /var/www/pepe
-echo "Soy pepe" > /var/www/pepe/index.html
 mkdir /var/www/maria
-echo "Soy maria" > /var/www/maria/index.html
 
-# * En el site availables añadimos lo siguiente
+echo "Soy adrian"   > /var/www/adrian/index.html
+echo "Soy pepe"     > /var/www/pepe/index.html
+echo "Soy maria"    > /var/www/maria/index.html
+
+# En el site availables añadimos lo siguiente
 echo "<VirtualHost *:8081>"                             >  /etc/apache2/sites-available/adrian.conf
 echo "    DocumentRoot /var/www/adrian"                 >> /etc/apache2/sites-available/adrian.conf
 echo "</VirtualHost>"                                   >> /etc/apache2/sites-available/adrian.conf
@@ -111,13 +112,16 @@ echo "<VirtualHost *:80>"                               >  /etc/apache2/sites-av
 echo "    DocumentRoot /var/www/maria"                  >> /etc/apache2/sites-available/maria.conf
 echo "</VirtualHost>"                                   >> /etc/apache2/sites-available/maria.conf
 
+# Comandos
 a2ensite maria.conf
 a2ensite adrian.conf
 a2ensite pepe.conf
 
 service apache2 restart
 
-# * Añadir DNS
+################################
+######------ DNS -------########
+################################
 apt install bind9 -y
 
 echo "zone \"icv\" {"                                         >  /etc/bind/named.conf.local
@@ -146,26 +150,27 @@ echo "www.pepe     IN  A    10.33.6.22"                       >> /etc/bind/db.ic
 #!bin/bash
 mkdir /var/www/html/prueba
 
-echo "Esta es la prueba en castellano" > /var/www/html/prueba/index.html.es
-echo "Esta es la prueba en ingles" > /var/www/html/prueba/index.html.en
-echo "Esta es la prueba en frances" > /var/www/html/prueba/index.html.fr
+# En el directorio prueba
+echo "Esta es la prueba en castellano"  > /var/www/html/prueba/index.html.es
+echo "Esta es la prueba en ingles"      > /var/www/html/prueba/index.html.en
+echo "Esta es la prueba en frances"     > /var/www/html/prueba/index.html.fr
 
 # En 000-default:
-<Directory /var/www/html/prueba>
-    DirectoryIndex index.html
-    Options MultiViews FollowSymLinks
-</Directory>
+echo "<Directory /var/www/html/prueba>"             >> /etc/apache2/sites-available/000-default.conf
+echo "    DirectoryIndex index.html"                >> /etc/apache2/sites-available/000-default.conf
+echo "    Options MultiViews FollowSymLinks"        >> /etc/apache2/sites-available/000-default.conf
+echo "</Directory>"                                 >> /etc/apache2/sites-available/000-default.conf
 
 # Comando:
 a2ensite 000-default.conf
 
 # apachectl -t : Comprobar sintaxis
 
-######
-###-- RESOLUCION POR NOMBRES
-######
+#################################
+###-- RESOLUCION POR NOMBRES --##
+#################################
 
-# * En el site availables añadimos lo siguiente
+# * En el site available
 echo "<VirtualHost *:80>"                               >  /etc/apache2/sites-available/adrian.conf
 echo "    ServerName www.adrian.icv"                    >> /etc/apache2/sites-available/adrian.conf
 echo "    DocumentRoot /var/www/adrian"                 >> /etc/apache2/sites-available/adrian.conf
@@ -201,44 +206,76 @@ Ex:
 
 #!/bin/bash
 mkdir /var/www/html/restringido
-echo "Directorio restringido" > /var/www/html/restringido/index.html
+# En el directorio restringido
+echo "Directorio restringido"                   >  /var/www/html/restringido/index.html
 
-# Añadir en 000-default:
-<Directory /var/www/html/restringido>
-    <RequireAny> # Que se cumpla alguna regla
-        Require ip 10.33.6.99 # Permitir acceso solo desde esta IP
-        Require ip 10.33.6.0/24 # Permitir acceso solo desde red
-        Require ip 127.0.0.7 # Permitir acceso solo desde esta IP local
-    </RequireAny>
-</Directory>
+# En 000-default:
+echo "<Directory /var/www/html/restringido>"    >> /etc/apache2/sites-available/000-default.conf
+# Que se cumpla alguna regla
+echo "    <RequireAny>"                         >> /etc/apache2/sites-available/000-default.conf 
+# Permitir acceso solo desde esta IP
+echo "        Require ip 10.33.6.99"            >> /etc/apache2/sites-available/000-default.conf
+# Permitir acceso solo desde red
+echo "        Require ip 10.33.6.0/24"          >> /etc/apache2/sites-available/000-default.conf 
+# Permitir acceso solo desde esta IP local
+echo "        Require ip 127.0.0.7"             >> /etc/apache2/sites-available/000-default.conf 
+echo "    </RequireAny>"                        >> /etc/apache2/sites-available/000-default.conf
+echo "</Directory>"                             >> /etc/apache2/sites-available/000-default.conf
 
 
 ################################
 #####---- AUTENTICACIÓN ----####
 ################################
-<Directory /var/www/html/restringido>
-    AuthType Basic
-    AuthName "Se require autenticación"
-    AuthUserFile "/etc/apache2/usuarios"
-    Require user usuario
-</Directory>
-
+# ! Autenticacion sin digest
 # Comandos
 # * Crear un archivo con el usuario
 htpasswd -c /etc/apache2/usuarios juan
+
+# En 000-default
+echo "<Directory /var/www/html/restringido>"            >> /etc/apache2/sites-available/000-default.conf
+echo "    AuthType Basic"                               >> /etc/apache2/sites-available/000-default.conf
+echo "    AuthName \"Se require autenticación\""        >> /etc/apache2/sites-available/000-default.conf
+echo "    AuthUserFile \"/etc/apache2/usuarios\""       >> /etc/apache2/sites-available/000-default.conf
+echo "    Require user usuario"                         >> /etc/apache2/sites-available/000-default.conf
+echo "</Directory>"                                     >> /etc/apache2/sites-available/000-default.conf
 
 # ! Autenticacion con digest
 # Comandos
 a2enmod auth_digest
 
+# * Crear un archivo con los diferentes usuarios y grupos
 htdigest -c /etc/apache2/usuarios_digest grupo1 usuario1
 htdigest /etc/apache2/usuarios_digest grupo1 usuario2
 htdigest /etc/apache2/usuarios_digest grupo2 usuario3
 
-#000-default
-<Directory /var/www/html/restringido>
-    AuthType Basic
-    AuthName "Se require autenticación"
-    AuthUserFile "/etc/apache2/usuarios_digest"
-    Require user usuario
-</Directory>
+# En 000-default
+echo "<Directory /var/www/html/restringido>"                >> /etc/apache2/sites-available/000-default.conf
+echo "    AuthType Digest"                                  >> /etc/apache2/sites-available/000-default.conf
+echo "    AuthName \"grupo1 grupo2\""                       >> /etc/apache2/sites-available/000-default.conf
+echo "    AuthUserFile \"/etc/apache2/usuarios_digest\""    >> /etc/apache2/sites-available/000-default.conf
+echo "    Require user usuario1"                            >> /etc/apache2/sites-available/000-default.conf
+echo "</Directory>"                                         >> /etc/apache2/sites-available/000-default.conf
+
+################################
+#######----- HTTPs ------#######
+################################
+# Comandos
+a2enmod ssl
+a2ensite default-ssl.conf
+
+################################
+######---- .htaccess ----#######
+################################
+# En 000-default.conf
+echo "<Directory /var/www/html/personal>"       >> /etc/apache2/sites-available/000-default.conf
+echo "    AllowOverride all"                    >> /etc/apache2/sites-available/000-default.conf
+echo "</Directory>"                             >> /etc/apache2/sites-available/000-default.conf
+
+# En el .htaccess del directorio
+echo "AuthType Basic"                           >  /var/www/html/personal/.htaccess
+echo "AuthName \"Prohibido\""                   >> /var/www/html/personal/.htaccess
+echo "AuthUserFile /var/www/html/users.txt"     >> /var/www/html/personal/.htaccess
+echo "Require user rodolfo"                     >> /var/www/html/personal/.htaccess
+
+# * Directiva -c porque es nuevo el archivo
+htpasswd -c /var/www/html/users.txt rodolfo
