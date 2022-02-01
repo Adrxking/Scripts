@@ -1,35 +1,20 @@
-# * --> Lubuntu 18 con dirección IP 10.33.xx.100
-# * --> Debian 9 con Hosts virtuales (uno por cada dominio), sobre la misma dirección IP 
-# * --> Los dominios son: informatica.fp, metal.fp, madera.fp y sonido.fp.
+# * 1.  Instalar y configurar un equipo con la distribución IPCop con las siguientes características:
+    # * - Tarjeta ROJA - IP estática de la red del aula.
+    # * - Tarjeta VERDE - Primera dirección IP de la LAN, por ejemplo, 10.33.xx.1
+    # * - Tarjeta NARANJA - Primera dirección IP de la DMZ, por ejemplo 10.33.1xx.1
+    # * - Configuración de las reglas NAT para dirigir el tráfico por el puerto 80 desde la WAN a la DMZ.
 
-# * --> informatica.fp (http://www.informatica.fp)
-# * document root /var/fp/informatica
-• página de inicio: index.html
-• no mostrar el contenido del directorio
-• acceso sólo desde la red 10.33.xx.0/24 o dominio informatica.fp
+# * 2.  Instalar y configurar un equipo el la DMZ con la distribución Debian con las siguientes características:
+    # * - Una interfaz de red (ensxx) con una dirección IP de la DMZ.
+    # * - Un servidor Apache 2.4 con un proxy inverso que redirija las peticiones al servidor Web que estará ubicado en la LAN.
 
-# * --> metal (http://www.metal.fp:8000)
-• document root /var/fp/metal
-• página de inicio: inicio.html
-• mostrar contenido del directorio
-• acceso desde cualquier red o dominio
-• directorio privado accesible sólo para el usuario herrero con password herrero
-mediante la url http://www.metal.fp:8000/hierro (configurar sin .htaccess)
+# * 3.  Instalar y configurar un equipo en la LAN con la distribución Ubuntu server 18 con las siguientes características:
+    # * - Una interfaz de red (ensxx) con una dirección IP de la LAN.
+    # * - Un servidor Apache 2.4 con un servidor Web que atiende las peticiones que le pasa el proxy con un gestor de contenidos o una plataforma educativa, por ejemplo Joomla o Moodle.
 
-# * --> madera.fp (https://www.madera.fp)
-• document root: /var/fp/madera
-• página de inicio: indice.html
-• mostrar contenido del directorio
-• directorio privado accesible sólo para el usuario carpintero con password carpintero
-mediante la url https://www.madera.fp/carpinteria (configurar con .htaccess)
-# * --> sonido.fp (http://www.sonido.fp)
-• será redirigido al equipo Debian con dirección IP 10.33.xx.200 mediante un proxy
-inverso
-• document root: /var/fp/sonido
-• directorio /surround alias de /home/surround (se debe configurar con la directiva
-Alias)
-• página de inicio: index.html
-• accesible desde cualquier red o dominio
+# * 4.  Comprobar que desde la red del aula se puede acceder al gestor de contenidos o plataforma educativa.
+
+# * 5.  Documentar la práctica.
 
 #!/bin/bash
 ################################
@@ -43,14 +28,19 @@ if [ "" = "$PKG_OK" ]; then
   echo "No $REQUIRED_PKG. Setting up $REQUIRED_PKG."
   sudo apt-get --yes install $REQUIRED_PKG
 fi
+
 # * RECUERDA PONER EL DNS CORRECTO
+
+# Declaracion de variables
 namedLocal=/etc/bind/named.conf.local
 
+# Creacion de zonas
 echo "zone \"fp\" {"                                          >  $namedLocal
 echo "  type master;"                                         >> $namedLocal
 echo "  file \"/etc/bind/db.fp\";"                            >> $namedLocal
 echo "};"                                                     >> $namedLocal
 
+# Configuracion de las zonas
 echo ";"                                                      >  /etc/bind/db.fp
 echo '$TTL    86400'                                          >> /etc/bind/db.fp
 echo "@     IN  SOA  lubuntu.icv.  adrian.  ("                >> /etc/bind/db.fp
@@ -66,6 +56,7 @@ echo "www.metal         IN  A    10.33.6.3"                   >> /etc/bind/db.fp
 echo "www.madera        IN  A    10.33.6.3"                   >> /etc/bind/db.fp
 echo "www.sonido        IN  A    10.33.6.3"                   >> /etc/bind/db.fp
 
+# Reiniciar servicio bind
 service bind9 restart
 
 ################################
