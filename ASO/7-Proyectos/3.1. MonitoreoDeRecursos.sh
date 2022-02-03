@@ -1,10 +1,14 @@
 # ! --> Script para monitorear los recursos del sistema.
 
-# * El script monitorea la RAM
+# * El script monitorea los recursos y la informacion del sistema.
 
-# * El script manda un email de aviso si algún recurso está por debajo del limite establecido
+# * El script monitorea si tenemos un disco con un uso mayor al 20% y nos informa en el informe.
 
-# * El script creara un log cada vez que se monitorean los recursos
+# * El script monitorea la carga de la CPU y comprueba si es mayor que 2, está entre 1 y 2 o si es menor a 1.
+
+# * El script creara un log cada vez que se monitorean los recursos.
+
+
 
 #!/bin/bash
 function SystemInfo() {
