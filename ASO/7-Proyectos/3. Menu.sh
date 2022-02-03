@@ -1,7 +1,4 @@
-# ! --> Script con Menú para importar o exportar usuarios usando 2 scripts externos
-
-# * El script debe preguntar si queremos crear un backup
-# * o restaurar ciertos usuarios. ✓
+# ! --> Script con Menú para obtener los recursos del sistema o obtener informacion o crear iptables
 
 #!/bin/bash
 
