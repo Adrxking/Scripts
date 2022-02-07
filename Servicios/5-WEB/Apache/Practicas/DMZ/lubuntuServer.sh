@@ -70,8 +70,19 @@ echo "  ErrorLog $logs/error_informatica.log"               >> $sitesAvailable/p
 echo "  CustomLog $logs/access_informatica.log combined"    >> $sitesAvailable/php.conf
 echo "</VirtualHost>"                                       >> $sitesAvailable/php.conf
 
+echo "<VirtualHost *:80>"                                   >  $sitesAvailable/wordpress.conf
+echo "  DocumentRoot /var/www/wordpress"                    >> $sitesAvailable/wordpress.conf
+echo "      <Directory /var/www/wordpress>"                 >> $sitesAvailable/wordpress.conf
+echo "          Options Indexes FollowSymLinks Multiviews"  >> $sitesAvailable/wordpress.conf
+echo "      </Directory>"                                   >> $sitesAvailable/wordpress.conf
+echo "  ErrorLog $logs/error_informatica.log"               >> $sitesAvailable/wordpress.conf
+echo "  CustomLog $logs/access_informatica.log combined"    >> $sitesAvailable/wordpress.conf
+echo "</VirtualHost>"                                       >> $sitesAvailable/wordpress.conf
+
 # Habilitar los sitios
-a2ensite php.conf
+a2ensite php.conf wordpress.conf
+
+a2dissite php.conf
 
 ################################
 ######---- FIN APACHE ----######
