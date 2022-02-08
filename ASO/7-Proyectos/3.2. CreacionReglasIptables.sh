@@ -134,7 +134,7 @@ clear
     case ${option} in
         1)
             # Si el usuario introduce la opcion 1 le ayudamos a crear una regla iptables
-            read -p "Que tabla deseas utilizar? opciones: (filter, nat, mangle) --> " iptablesTable
+            read -p "Que tabla deseas utilizar? opciones: (filter) --> " iptablesTable
 
             # Comprobar si el usuario ha introducido la opcion filter
             if [ "$iptablesTable" == "filter" ]; then
@@ -184,15 +184,6 @@ clear
                 else
                     echo "Ocurrio un problema creando la regla..."
                 fi
-
-
-            # Comprobar si el usuario ha introducido la opcion nat
-            elif [ "$iptablesTable" == "nat" ]; then
-                getNatChain()
-
-            # Comprobar si el usuario ha introducido la opcion mangle
-            elif [ "$iptablesTable" == "mangle" ]; then
-                getMangleChain()
 
             else
                 echo "Tabla seleccionada invalida"
