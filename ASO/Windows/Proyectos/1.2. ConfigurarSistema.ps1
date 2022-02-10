@@ -45,3 +45,14 @@ Write-Output " ## ESTOS SON LOS PERMISOS DEL DIRECTORIO COMPARTIDO SharedAdmin #
 Get-SmbShareAccess SharedAdmin
 
 <# 1.6. Copia de seguridad diaria de la carpeta SharedAdmin #>
+# Script copia de seguridad
+Write-Output "xcopy /i /e /y /d c:\Shared c:\backups\administradores" > C:\scripts\Backup.ps1
+# Crear la acción.
+$accion = New-ScheduledTaskAction -Execute "PowerShell.exe" -Argument "C:\scripts\Backup.ps1"
+
+# Creamos el desencadenante.
+$disparador = New-ScheduledTaskTrigger -Daily -At 23pm
+
+Write-Host
+# Registrar tarea para que se ejecute.
+Register-ScheduledTask -Action $accion -Trigger $disparador -TaskName "Copia" -Description "Copia de seguridad"
