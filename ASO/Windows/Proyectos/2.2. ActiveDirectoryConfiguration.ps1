@@ -34,3 +34,16 @@ New-ADUser "Carmen Maura" -Path "OU=usuarios,DC=farma,DC=lab" -SamAccountName ca
 Add-ADGroupmember Contabilidad -Members carmenmaura
 Add-ADGroupmember Ventas -Members victoriaabril
 Add-ADGroupmember Laboratorio -Members luistosar
+
+# Establecer contraseñas a los usuarios
+Set-ADAccountPassword carmenmaura -NewPassword (ConvertTo-SecureString -AsPlainText "P@ssw0rd" -force)
+Set-ADAccountPassword victoriaabril -NewPassword (ConvertTo-SecureString -AsPlainText "P@ssw0rd" -force)
+Set-ADAccountPassword luistosar -NewPassword (ConvertTo-SecureString -AsPlainText "P@ssw0rd" -force)
+# Obliga al usuario a cambiar la contraseña en el próximo intento de inicio de sesión.
+Set-ADUser carmenmaura -ChangePasswordAtLogon $True
+Set-ADUser victoriaabril -ChangePasswordAtLogon $True
+Set-ADUser luistosar -ChangePasswordAtLogon $True
+# Habilitar las cuentas de los usuarios
+Enable-ADAccount carmenmaura
+Enable-ADAccount victoriaabril
+Enable-ADAccount luistosar
