@@ -53,6 +53,14 @@ Write-Output " "
 write-host -foregroundcolor YELLOW -nonewline "    Hecho. " 
 Write-Output " "
 
+<# Establecer una red NAT #>
+write-host -BackgroundColor MAGENTA "4.- Establecer Dirección NAT. "
+Write-Output " " 
+New-NetIpAddress -InterfaceIndex 25 -IpAddress 192.168.7.167 -PrefixLength 24 -DefaultGateway 192.168.7.254 -AddressFamily IPv4 -Confirm:$False > $Null
+Write-Output " " 
+write-host -foregroundcolor YELLOW -nonewline "    Hecho. " 
+Write-Output " "
+
 <# Reiniciar el Sistema #>
 write-host -ForegroundColor Red "       Se procede al REINICIO DEL SISTEMA " -NoNewline
 Start-Sleep -Seconds 5
