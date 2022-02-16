@@ -13,13 +13,28 @@ checkPackage () {
 REQUIRED_PKG="bind9"
 checkPackage $REQUIRED_PKG
 
-REQUIRED_PKG="mailutils"
+REQUIRED_PKG="mariadb-server"
+checkPackage $REQUIRED_PKG
+
+REQUIRED_PKG="postfix"
+checkPackage $REQUIRED_PKG
+
+REQUIRED_PKG="postfix-mysql"
 checkPackage $REQUIRED_PKG
 
 REQUIRED_PKG="dovecot-pop3d"
 checkPackage $REQUIRED_PKG
 
+REQUIRED_PKG="dovecot-core"
+checkPackage $REQUIRED_PKG
+
+REQUIRED_PKG="dovecot-lmtpd"
+checkPackage $REQUIRED_PKG
+
 REQUIRED_PKG="dovecot-imapd"
+checkPackage $REQUIRED_PKG
+
+REQUIRED_PKG="dovecot-mysql"
 checkPackage $REQUIRED_PKG
 
 REQUIRED_PKG="nmap"
@@ -53,7 +68,13 @@ echo "dns               IN  A         10.33.6.3"              >> /etc/bind/db.mi
 echo "@                 IN  MX  10    10.33.6.3"              >> /etc/bind/db.midominio.icv
 echo "correo            IN  A         10.33.6.3"              >> /etc/bind/db.midominio.icv
 
+### REINICIO DEL SERVICIO ###
 service bind9 restart
+
+############################
+### CONFIGURACION MYSQL  ###
+############################
+mysql -u root < /mysql.sql
 
 ##############################
 ### CONFIGURACION POSTFIX  ###
@@ -62,16 +83,6 @@ service bind9 restart
 ### SET OUR DNS SERVER  ###
 sed -i "s/mydestination = \$myhostname, usuario-vmwarevirtualplatform, localhost.localdomain, , localhost/mydestination = \$myhostname, usuario-vmwarevirtualplatform, localhost.localdomain, midominio.icv, localhost/" /etc/postfix/main.cf
 
-### SEND MESSAGE  ###
-# telnet localhost smtp
-#    --> ehlo localhost
-#    --> mail from: <usuario@midominio.icv>
-#    --> rcpt to: <usuario@midominio.icv>
-#    --> data
-#    --> Hola.
-#    --> Esto es una prueba de correo.
-#    --> .
-#    --> quit
 
 
 ############################
@@ -84,37 +95,3 @@ if [ "$(grep -cw "^mail_location = mbox:~/mail:INBOX=/var/mail/%u" /etc/dovecot/
     echo "mail_location = mbox:~/mail:INBOX=/var/mail/%u" >> /etc/dovecot/dovecot.conf
 fi
 
-### SEND MESSAGE  ###
-# telnet localhost 110
-#   --> user usuario
-#   --> pass usuario
-#   --> list --> Lista de mensajes
-#   --> retr 1 --> Obtener el primer mensaje
-#   --> quit
-
-# telnet localhost 143
-#   --> 1 login usuario usuario
-#   --> 2 list "" "*"
-#   --> 3 select "INBOX"
-#   --> 4 fetch 1 all
-#   --> 5 fetch 1 body[]
-#   --> 6 fetch 2 all
-#   --> 7 fetch 2 body[]
-#   --> 8 logout
-
-###########################################
-## SEND MESSAGE FROM ONE USER TO ANOTHER ##
-###########################################
-### CREATE USER  ###
-# adduser pepe
-
-### SEND MESSAGE  ###
-# telnet localhost 25
-#    --> ehlo localhost
-#    --> mail from: <usuario@midominio.icv>
-#    --> rcpt to: <pepe@midominio.icv>
-#    --> data
-#    --> Hola.
-#    --> Esto es una prueba de correo.
-#    --> .
-#    --> quit
