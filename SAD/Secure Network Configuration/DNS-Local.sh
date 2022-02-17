@@ -1,14 +1,32 @@
 #!/bin/bash
-# Instalar paquetes
-apt update -y
-apt install bind9 -y
-apt install nmap -y
+###################################################
+#####-----Actualizar sistema-----##################
+###################################################
+apt update -y && apt upgrade -y
+
+###################################################
+###-----Instalar isc-dhcp-server e iptables-----###
+###################################################
+checkPackage () {
+    PKG_OK=$(dpkg-query -W --showformat='${Status}\n' $1|grep "install ok installed")
+    echo Checking for $1: $PKG_OK
+    if [ "" = "$PKG_OK" ]; then
+        echo "No $1. Setting up $1."
+        sudo apt-get --yes install $1
+    fi
+}
+
+REQUIRED_PKG="bind9"
+checkPackage $REQUIRED_PKG
+
+REQUIRED_PKG="nmap"
+checkPackage $REQUIRED_PKG
 
 ###################################################
 ###---Crear nuestras zonas directas e inversas---##
 ###################################################
 # * Aquí no hay que hacer nada para las delegaciones * #
-echo 'zone "asir6" {'                         > /etc/bind/named.conf.local
+echo 'zone "asir6" {'                         >  /etc/bind/named.conf.local
 echo "      type master;"                     >> /etc/bind/named.conf.local
 echo '      file "/etc/bind/db.asir6"; '      >> /etc/bind/named.conf.local
 echo "};"                                     >> /etc/bind/named.conf.local
@@ -25,7 +43,6 @@ echo ""                                       >> /etc/bind/named.conf.local
 ###################################################
 ###---Crear configuracion de la DB de las zonas--##
 ###################################################
-touch /etc/bind/db.asir6
 
 echo ";"                                               >  /etc/bind/db.asir6 
 echo '"$TTL"    86400'                                 >> /etc/bind/db.asir6
@@ -40,7 +57,6 @@ echo "@        IN  NS       ns1.asir6."                >> /etc/bind/db.asir6 # @
 echo "ipfire   IN  A        40.12.1.1"                 >> /etc/bind/db.asir6
 
 # * ZONA INVERSA * #
-touch /etc/bind/db.192.168.1
 
 echo ";"                                               >  /etc/bind/db.192.168.1
 echo '"$TTL"    86400'                                 >> /etc/bind/db.192.168.1
@@ -53,7 +69,6 @@ echo "                   86400 ) ; Negative Cache TTL" >> /etc/bind/db.192.168.1
 echo ";"                                               >> /etc/bind/db.192.168.1
 echo "@        IN  NS       ns1.asir6."                >> /etc/bind/db.192.168.1
 echo "1        IN  PTR      ipfire.asir6."             >> /etc/bind/db.192.168.1
-
 
 
 ###################################################
