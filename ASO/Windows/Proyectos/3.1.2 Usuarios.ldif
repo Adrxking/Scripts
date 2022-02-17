@@ -1,0 +1,26 @@
+dn: CN=Morgado, OU=usuarios, DC=farma, DC=lab
+changetype: add
+objectClass: User
+cn: Morgado
+SAMAccountName: morgado
+mail: morgado@curavalera.es
+homePhone: 642354124
+userPassword: P@ssw0rd
+
+dn: CN=Marco, OU=usuarios, DC=farma, DC=lab
+changetype: add
+objectClass: User
+cn: Marco
+SAMAccountName: marco
+mail: marco@curavalera.es
+homePhone: 642354124
+userPassword: P@ssw0rd
+
+dn: CN=Gines, OU=usuarios, DC=farma, DC=lab
+changetype: add
+objectClass: User
+cn: Gines
+SAMAccountName: gines
+mail: gines@curavalera.es
+homePhone: 642354124
+userPassword: P@ssw0rd
