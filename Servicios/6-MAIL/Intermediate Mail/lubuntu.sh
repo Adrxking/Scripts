@@ -86,7 +86,7 @@ echo "Fin de la configuración de bind9"
 ### CONFIGURACION MYSQL  ###
 ############################
 echo "Iniciada la configuracion de MySQL"
-mysql -u root < /mysql.sql
+mysql -u root < ./mysql.sql
 echo "Fin de la configuracion de MySQL"
 
 
@@ -167,14 +167,14 @@ echo "usuario-vmwarevirtualplatform" > /etc/mailname
 # CONFIGURACION DEL MAIN.CF
 echo "Cambiando el archivo /etc/postfix/main.cf"
 mainCf=/etc/postfix/main.cf
-cat /main.cf                                                    >  $mainCf
+cat ./main.cf                                                    >  $mainCf
 echo "Fin de la modificacion del archivo /etc/postfix/main.cf"
 
 
 # CONFIGURACION DEL MASTER.CF
 masterCf=/etc/postfix/master.cf
 echo "Cambiando el archivo /etc/postfix/master.cf"
-cat /master.cf                                                    >  $masterCf
+cat ./master.cf                                                    >  $masterCf
 echo "Fin de la modificacion del archivo /etc/postfix/master.cf"
 
 # COMPROBAR LA CONFIGURACION DE POSTFIX
@@ -191,32 +191,32 @@ dovecotConf=/etc/dovecot/conf.d
 
 # CONFIGURACION DEL MASTER.CF
 echo "Cambiando el archivo /etc/dovecot/conf.d/10-auth.conf"
-cat /10-auth.conf                                                    >  $dovecotConf/10-auth.conf
+cat ./10-auth.conf                                                    >  $dovecotConf/10-auth.conf
 echo "Fin de la modificacion del archivo /etc/dovecot/conf.d/10-auth.conf"
 
 # CONFIGURACION DEL MASTER.CF
 echo "Cambiando el archivo /etc/dovecot/conf.d/10-mail.conf"
-cat /10-mail.conf                                                    >  $dovecotConf/10-mail.conf
+cat ./10-mail.conf                                                    >  $dovecotConf/10-mail.conf
 echo "Fin de la modificacion del archivo /etc/dovecot/conf.d/10-mail.conf"
 
 # CONFIGURACION DEL MASTER.CF
 echo "Cambiando el archivo /etc/dovecot/conf.d/10-master.conf"
-cat /10-master.conf                                                    >  $dovecotConf/10-master.conf
+cat ./10-master.conf                                                    >  $dovecotConf/10-master.conf
 echo "Fin de la modificacion del archivo /etc/dovecot/conf.d/10-master.conf"
 
 # CONFIGURACION DEL MASTER.CF
 echo "Cambiando el archivo /etc/dovecot/conf.d/10-ssl.conf"
-cat /10-ssl.conf                                                    >  $dovecotConf/10-ssl.conf
+cat ./10-ssl.conf                                                    >  $dovecotConf/10-ssl.conf
 echo "Fin de la modificacion del archivo /etc/dovecot/conf.d/10-ssl.conf"
 
 # CONFIGURACION DEL MASTER.CF
 echo "Cambiando el archivo /etc/dovecot/conf.d/15-lda.conf"
-cat /15-lda.conf                                                    >  $dovecotConf/15-lda.conf
+cat ./15-lda.conf                                                    >  $dovecotConf/15-lda.conf
 echo "Fin de la modificacion del archivo /etc/dovecot/conf.d/15-lda.conf"
 
 # CONFIGURACION DEL MASTER.CF
 echo "Cambiando el archivo /etc/dovecot/conf.d/auth-sql.conf.ext"
-cat /auth-sql.conf.ext                                                    >  $dovecotConf/auth-sql.conf.ext
+cat ./auth-sql.conf.ext                                                    >  $dovecotConf/auth-sql.conf.ext
 echo "Fin de la modificacion del archivo /etc/dovecot/conf.d/auth-sql.conf.ext"
 
 ### CONFIGURACION CARPETA /ETC/DOVECOT ###
@@ -224,10 +224,10 @@ dovecot=/etc/dovecot
 
 # CONFIGURACION DEL MASTER.CF
 echo "Cambiando el archivo /etc/dovecot/dovecot-sql.conf.ext"
-cat /dovecot-sql.conf.ext                                                    >  $dovecot/dovecot-sql.conf.ext
+cat ./dovecot-sql.conf.ext                                                    >  $dovecot/dovecot-sql.conf.ext
 echo "Fin de la modificacion del archivo /etc/dovecot/dovecot-sql.conf.ext"
 
 # CONFIGURACION DEL MASTER.CF
 echo "Cambiando el archivo /etc/dovecot/dovecot.conf"
-cat /dovecot.conf                                                    >  $dovecot/dovecot.conf
+cat ./dovecot.conf                                                    >  $dovecot/dovecot.conf
 echo "Fin de la modificacion del archivo /etc/dovecot/dovecot.conf"
