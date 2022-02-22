@@ -56,26 +56,48 @@ echo "Inicio de la configuracion de Bind9"
 
 # * RECUERDA PONER EL DNS CORRECTO
 namedLocal=/etc/bind/named.conf.local
-dnsDb=/etc/bind/db.midominio.icv
+dnsAldeagalaDb=/etc/bind/db.aldeagala.icv
+dnsSimpsonsDb=/etc/bind/db.simpsons.icv
 
-echo "zone \"midominio.icv\" {"                               >  $namedLocal
+echo "zone \"aldeagala.icv\" {"                               >  $namedLocal
 echo "  type master;"                                         >> $namedLocal
-echo "  file \"/etc/bind/db.midominio.icv\";"                 >> $namedLocal
+echo "  file \"/etc/bind/db.aldeagala.icv\";"                 >> $namedLocal
 echo "};"                                                     >> $namedLocal
 
-echo ";"                                                      >  $dnsDb
-echo '$TTL    86400'                                          >> $dnsDb
-echo "@     IN  SOA  dns.midominio.icv.  adrian.  ("          >> $dnsDb
-echo "                             1   ;  Serial"             >> $dnsDb
-echo "                        604800   ; Refresh"             >> $dnsDb
-echo "                         86400   ; Retry"               >> $dnsDb
-echo "                       2419200   ; Expire"              >> $dnsDb
-echo "                         86400 ) ; Negative Cache TTL"  >> $dnsDb
-echo ";"                                                      >> $dnsDb
-echo "@                 IN  NS   dns.midominio.icv."          >> $dnsDb
-echo "dns               IN  A         10.33.6.3"              >> $dnsDb
-echo "@                 IN  MX  10    10.33.6.3"              >> $dnsDb
-echo "correo            IN  A         10.33.6.3"              >> $dnsDb
+echo ""                                                       >> $namedLocal
+
+echo "zone \"simpsons.icv\" {"                                >> $namedLocal
+echo "  type master;"                                         >> $namedLocal
+echo "  file \"/etc/bind/db.simpsons.icv\";"                  >> $namedLocal
+echo "};"                                                     >> $namedLocal
+
+echo ";"                                                      >  $dnsAldeagalaDb
+echo '$TTL    86400'                                          >> $dnsAldeagalaDb
+echo "@     IN  SOA  dns.aldeagala.icv.  adrian.  ("          >> $dnsAldeagalaDb
+echo "                             1   ;  Serial"             >> $dnsAldeagalaDb
+echo "                        604800   ; Refresh"             >> $dnsAldeagalaDb
+echo "                         86400   ; Retry"               >> $dnsAldeagalaDb
+echo "                       2419200   ; Expire"              >> $dnsAldeagalaDb
+echo "                         86400 ) ; Negative Cache TTL"  >> $dnsAldeagalaDb
+echo ";"                                                      >> $dnsAldeagalaDb
+echo "@                 IN  NS        dns.aldeagala.icv."     >> $dnsAldeagalaDb
+echo "dns               IN  A         10.33.6.3"              >> $dnsAldeagalaDb
+echo "@                 IN  MX  10    correo.aldeagala.icv"   >> $dnsAldeagalaDb
+echo "correo            IN  A         10.33.6.3"              >> $dnsAldeagalaDb
+
+echo ";"                                                      >  $dnsSimpsonsDb
+echo '$TTL    86400'                                          >> $dnsSimpsonsDb
+echo "@     IN  SOA  dns.simpsons.icv.  adrian.  ("           >> $dnsSimpsonsDb
+echo "                             1   ;  Serial"             >> $dnsSimpsonsDb
+echo "                        604800   ; Refresh"             >> $dnsSimpsonsDb
+echo "                         86400   ; Retry"               >> $dnsSimpsonsDb
+echo "                       2419200   ; Expire"              >> $dnsSimpsonsDb
+echo "                         86400 ) ; Negative Cache TTL"  >> $dnsSimpsonsDb
+echo ";"                                                      >> $dnsSimpsonsDb
+echo "@                 IN  NS        dns.simpsons.icv."      >> $dnsSimpsonsDb
+echo "dns               IN  A         10.33.6.3"              >> $dnsSimpsonsDb
+echo "@                 IN  MX  10    correo.simpsons.icv"    >> $dnsSimpsonsDb
+echo "correo            IN  A         10.33.6.3"              >> $dnsSimpsonsDb
 
 ### REINICIO DEL SERVICIO ###
 service bind9 restart
@@ -159,22 +181,24 @@ echo "Si devuelve un correo significa que es correcta"
 postmap -q bajito@aldeagala.icv mysql:$dbConnectionAlias
 echo "Fin comprobar la asignacion con la tabla Alias"
 
-### CREAR EL ORIGEN DEL MAILNAME
+
+### CREAR EL ORIGEN DEL MAILNAME ###
 echo "usuario-vmwarevirtualplatform" > /etc/mailname
+
 
 ### CONFIGURACION MAIN.CF Y MASTER.CF ###
 
 # CONFIGURACION DEL MAIN.CF
 echo "Cambiando el archivo /etc/postfix/main.cf"
 mainCf=/etc/postfix/main.cf
-cat ./main.cf                                                    >  $mainCf
+cat ./main.cf                                                               >  $mainCf/main.cf 
 echo "Fin de la modificacion del archivo /etc/postfix/main.cf"
 
 
 # CONFIGURACION DEL MASTER.CF
 masterCf=/etc/postfix/master.cf
 echo "Cambiando el archivo /etc/postfix/master.cf"
-cat ./master.cf                                                    >  $masterCf
+cat ./master.cf                                                             >  $masterCf/master.cf
 echo "Fin de la modificacion del archivo /etc/postfix/master.cf"
 
 # COMPROBAR LA CONFIGURACION DE POSTFIX
@@ -189,45 +213,45 @@ echo "Fin de la comprobacion de la configuracion de Postfix"
 ### CONFIGURACION CARPETA /ETC/DOVECOT/CONF.D ###
 dovecotConf=/etc/dovecot/conf.d
 
-# CONFIGURACION DEL MASTER.CF
+# CONFIGURACION DEL 10-AUTH.CONF
 echo "Cambiando el archivo /etc/dovecot/conf.d/10-auth.conf"
-cat ./10-auth.conf                                                    >  $dovecotConf/10-auth.conf
+cat ./10-auth.conf                                                          >  $dovecotConf/10-auth.conf
 echo "Fin de la modificacion del archivo /etc/dovecot/conf.d/10-auth.conf"
 
-# CONFIGURACION DEL MASTER.CF
+# CONFIGURACION DEL 10-MAIL.CONF
 echo "Cambiando el archivo /etc/dovecot/conf.d/10-mail.conf"
-cat ./10-mail.conf                                                    >  $dovecotConf/10-mail.conf
+cat ./10-mail.conf                                                          >  $dovecotConf/10-mail.conf
 echo "Fin de la modificacion del archivo /etc/dovecot/conf.d/10-mail.conf"
 
-# CONFIGURACION DEL MASTER.CF
+# CONFIGURACION DEL 10-MASTER.CONF
 echo "Cambiando el archivo /etc/dovecot/conf.d/10-master.conf"
-cat ./10-master.conf                                                    >  $dovecotConf/10-master.conf
+cat ./10-master.conf                                                        >  $dovecotConf/10-master.conf
 echo "Fin de la modificacion del archivo /etc/dovecot/conf.d/10-master.conf"
 
-# CONFIGURACION DEL MASTER.CF
+# CONFIGURACION DEL 10-SSL.CONF
 echo "Cambiando el archivo /etc/dovecot/conf.d/10-ssl.conf"
-cat ./10-ssl.conf                                                    >  $dovecotConf/10-ssl.conf
+cat ./10-ssl.conf                                                           >  $dovecotConf/10-ssl.conf
 echo "Fin de la modificacion del archivo /etc/dovecot/conf.d/10-ssl.conf"
 
-# CONFIGURACION DEL MASTER.CF
+# CONFIGURACION DEL 15-LDA.CONF
 echo "Cambiando el archivo /etc/dovecot/conf.d/15-lda.conf"
-cat ./15-lda.conf                                                    >  $dovecotConf/15-lda.conf
+cat ./15-lda.conf                                                           >  $dovecotConf/15-lda.conf
 echo "Fin de la modificacion del archivo /etc/dovecot/conf.d/15-lda.conf"
 
-# CONFIGURACION DEL MASTER.CF
+# CONFIGURACION DEL AUTH-SQL.CONF.EXT
 echo "Cambiando el archivo /etc/dovecot/conf.d/auth-sql.conf.ext"
-cat ./auth-sql.conf.ext                                                    >  $dovecotConf/auth-sql.conf.ext
+cat ./auth-sql.conf.ext                                                     >  $dovecotConf/auth-sql.conf.ext
 echo "Fin de la modificacion del archivo /etc/dovecot/conf.d/auth-sql.conf.ext"
 
 ### CONFIGURACION CARPETA /ETC/DOVECOT ###
 dovecot=/etc/dovecot
 
-# CONFIGURACION DEL MASTER.CF
+# CONFIGURACION DEL DOVECOT-SQL.CONF.EXT
 echo "Cambiando el archivo /etc/dovecot/dovecot-sql.conf.ext"
-cat ./dovecot-sql.conf.ext                                                    >  $dovecot/dovecot-sql.conf.ext
+cat ./dovecot-sql.conf.ext                                                   >  $dovecot/dovecot-sql.conf.ext
 echo "Fin de la modificacion del archivo /etc/dovecot/dovecot-sql.conf.ext"
 
-# CONFIGURACION DEL MASTER.CF
+# CONFIGURACION DEL DOVECOT.CONF
 echo "Cambiando el archivo /etc/dovecot/dovecot.conf"
-cat ./dovecot.conf                                                    >  $dovecot/dovecot.conf
+cat ./dovecot.conf                                                           >  $dovecot/dovecot.conf
 echo "Fin de la modificacion del archivo /etc/dovecot/dovecot.conf"
