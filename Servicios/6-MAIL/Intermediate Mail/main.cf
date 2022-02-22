@@ -1,0 +1,97 @@
+smtpd_banner = $myhostname ESMTP $mail_name (Ubuntu)
+biff = no
+append_dot_mydomain = no
+readme_directory = no
+compatibility_level = 2
+
+# SASL parameters
+# -----------------------
+smtpd_sasl_type = dovecot
+smtpd_sasl_path = private/auth
+smtpd_sasl_auth_enable = yes
+broken_sasl_auth_clients = yes
+smtpd_sasl_security_options = noanonymous, noplaintext
+smtpd_sasl_local_domain =
+smtpd_sasl_authenticated_header = yes
+
+# TLS parameters
+# -----------------------
+smtpd_tls_cert_file=/etc/ssl/certs/ssl-cert-snakeoil.pem
+smtpd_tls_key_file=/etc/ssl/private/ssl-cert-snakeoil.key
+smtpd_use_tls=yes
+smtpd_tls_security_level = may
+smtpd_tls_auth_only = yes
+smtpd_sasl_tls_security_options = noanonymous
+smtpd_tls_loglevel = 1
+smtpd_tls_received_header = yes
+smtpd_tls_session_cache_timeout = 3600s
+smtpd_tls_protocols = !SSLv2, !SSLv3
+smtpd_tls_ciphers = high
+smtp_use_tls=yes
+smtp_tls_security_level = may
+smtp_tls_note_starttls_offer = yes
+tls_random_source = dev:/dev/urandom
+
+# SMTPD parameters
+# -----------------------
+unknown_local_recipient_reject_code = 450
+maximal_queue_lifetime = 7d
+minimal_backoff_time = 1000s
+maximal_backoff_time = 8000s
+smtp_helo_timeout = 60s
+smtpd_recipient_limit = 25
+smtpd_error_sleep_time = 1s
+smtpd_soft_error_limit = 3
+smtpd_hard_error_limit = 12
+smtpd_delay_reject = yes
+disable_vrfy_command = yes
+
+# HELO Restrictions - Reject - HELO/EHLO information
+smtpd_helo_required = yes
+smtpd_helo_restrictions = permit_mynetworks, warn_if_reject reject_non_fqdn_hostname, reject_invalid_hostname, permit
+
+# Sender Restrictions - Reject - MAIL FROM
+smtpd_sender_restrictions = permit_mynetworks, permit_sasl_authenticated, warn_if_reject reject_non_fqdn_sender, reject_authenticated_sender_login_mismatch, reject_unknown_sender_domain, reject_unauth_pipelining, permit
+
+# Client Restrictions - Connecting server - Reject client host
+smtpd_client_restrictions = reject_rbl_client sbl.spamhaus.org, reject_rbl_client blackholes.easynet.nl, reject_rbl_client dnsbl.njabl.org
+
+# Recipient Restrictions - Reject - RCPT TO
+smtpd_recipient_restrictions = permit_mynetworks, permit_sasl_authenticated, reject_non_fqdn_hostname, reject_non_fqdn_sender, reject_non_fqdn_recipient, reject_unknown_recipient_domain, reject_unauth_destination, reject_unauth_pipelining, reject_invalid_hostname, check_policy_service unix:private/policy-spf, check_policy_service inet:127.0.0.1:10023, permit
+
+# Reject - DATA
+smtpd_data_restrictions = reject_unauth_pipelining
+
+# Relay Restrictions - Reject - RCPT TO
+smtpd_relay_restrictions = permit_mynetworks, reject_unauth_pipelining, permit_sasl_authenticated, reject_non_fqdn_recipient, reject_unknown_recipient_domain, reject_unauth_destination, check_policy_service unix:private/policy-spf, check_policy_service inet:127.0.0.1:10023, permit
+
+# General parameters
+# -----------------------
+myhostname = lubuntu
+alias_maps = hash:/etc/aliases
+alias_database = hash:/etc/aliases
+myorigin = /etc/mailname
+mydestination = localhost
+relayhost = 
+mynetworks = 127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128
+mailbox_size_limit = 0
+recipient_delimiter = +
+inet_interfaces = all
+inet_protocols = all
+mynetworks_style = host
+message_size_limit = 10240000
+
+# Dovecot
+# -----------------------
+virtual_transport = lmtp:unix:private/dovecot-lmtp
+
+# Virtual Mailbox
+# -----------------------
+virtual_uid_maps = static:5000
+virtual_gid_maps = static:5000
+virtual_mailbox_base = /var/vmail
+virtual_mailbox_domains = mysql:/etc/postfix/mysql_virtual_mailbox_domains.cf
+virtual_mailbox_maps = mysql:/etc/postfix/mysql_virtual_mailbox_maps.cf
+virtual_alias_maps = mysql:/etc/postfix/mysql_virtual_alias_maps.cf
+
+queue_directory = /var/spool/postfix

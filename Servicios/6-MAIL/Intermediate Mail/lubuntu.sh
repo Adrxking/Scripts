@@ -159,122 +159,75 @@ echo "Si devuelve un correo significa que es correcta"
 postmap -q bajito@aldeagala.icv mysql:$dbConnectionAlias
 echo "Fin comprobar la asignacion con la tabla Alias"
 
-### CONFIGURACION DEL MAIN.CF ###
+### CREAR EL ORIGEN DEL MAILNAME
+echo "usuario-vmwarevirtualplatform" > /etc/mailname
+
+### CONFIGURACION MAIN.CF Y MASTER.CF ###
+
+# CONFIGURACION DEL MAIN.CF
 echo "Cambiando el archivo /etc/postfix/main.cf"
 mainCf=/etc/postfix/main.cf
-echo "smtpd_banner = $myhostname ESMTP $mail_name (Ubuntu)"                                 >  $mainCf
-echo "biff = no"                                                                            >> $mainCf
-echo "append_dot_mydomain = no"                                                             >> $mainCf
-echo "readme_directory = no"                                                                >> $mainCf
-echo "compatibility_level = 2"                                                              >> $mainCf
-echo "# SASL parameters"                                                                    >> $mainCf
-echo "# -----------------------"                                                            >> $mainCf
-echo "smtpd_sasl_type = dovecot"                                                            >> $mainCf
-echo "smtpd_sasl_path = private/auth"                                                       >> $mainCf
-echo "smtpd_sasl_auth_enable = yes"                                                         >> $mainCf
-echo "broken_sasl_auth_clients = yes"                                                       >> $mainCf
-echo "smtpd_sasl_security_options = noanonymous, noplaintext"                               >> $mainCf
-echo "smtpd_sasl_local_domain ="                                                            >> $mainCf
-echo "smtpd_sasl_authenticated_header = yes"                                                >> $mainCf
-echo "# TLS parameters"                                                                     >> $mainCf
-echo "# -----------------------"                                                            >> $mainCf
-echo "smtpd_tls_cert_file=/etc/ssl/certs/ssl-cert-snakeoil.pem"                             >> $mainCf
-echo "smtpd_tls_key_file=/etc/ssl/private/ssl-cert-snakeoil.key"                            >> $mainCf
-echo "smtpd_use_tls=yes"                                                                    >> $mainCf
-echo "smtpd_tls_security_level = may"                                                       >> $mainCf
-echo "smtpd_tls_auth_only = yes"                                                            >> $mainCf
-echo "smtpd_sasl_tls_security_options = noanonymous"                                        >> $mainCf
-echo "smtpd_tls_loglevel = 1"                                                               >> $mainCf
-echo "smtpd_tls_received_header = yes"                                                      >> $mainCf
-echo "smtpd_tls_session_cache_timeout = 3600s"                                              >> $mainCf
-echo "smtpd_tls_protocols = !SSLv2, !SSLv3"                                                 >> $mainCf
-echo "smtpd_tls_ciphers = high"                                                             >> $mainCf
-echo "smtp_use_tls=yes"                                                                     >> $mainCf
-echo "smtp_tls_security_level = may"                                                        >> $mainCf
-echo "smtp_tls_note_starttls_offer = yes"                                                   >> $mainCf
-echo "tls_random_source = dev:/dev/urandom"                                                 >> $mainCf
-echo "# SMTPD parameters"                                                                   >> $mainCf
-echo "# -----------------------"                                                            >> $mainCf
-echo "unknown_local_recipient_reject_code = 450"                                            >> $mainCf
-echo "maximal_queue_lifetime = 7d"                                                          >> $mainCf
-echo "minimal_backoff_time = 1000s"                                                         >> $mainCf
-echo "maximal_backoff_time = 8000s"                                                         >> $mainCf
-echo "smtp_helo_timeout = 60s"                                                              >> $mainCf
-echo "smtpd_recipient_limit = 25"                                                           >> $mainCf
-echo "smtpd_error_sleep_time = 1s"                                                          >> $mainCf
-echo "smtpd_soft_error_limit = 3"                                                           >> $mainCf
-echo "smtpd_hard_error_limit = 12"                                                          >> $mainCf
-echo "smtpd_delay_reject = yes"                                                             >> $mainCf
-echo "disable_vrfy_command = yes"                                                           >> $mainCf
-echo "# HELO Restrictions - Reject - HELO/EHLO information"                                 >> $mainCf
-echo "smtpd_helo_required = yes"                                                            >> $mainCf
-echo "smtpd_helo_restrictions = permit_mynetworks, warn_if_reject"                          >> $mainCf
-echo "reject_non_fqdn_hostname, reject_invalid_hostname, permit"                            >> $mainCf
-echo "# Sender Restrictions - Reject - MAIL FROM"                                           >> $mainCf
-echo "smtpd_sender_restrictions = permit_mynetworks, permit_sasl_authenticated,"            >> $mainCf
-echo "warn_if_reject reject_non_fqdn_sender, reject_authenticated_sender_login_mismatch,"   >> $mainCf
-echo "reject_unknown_sender_domain, reject_unauth_pipelining, permit"                       >> $mainCf
-echo "# Client Restrictions - Connecting server - Reject client host"                       >> $mainCf
-echo "smtpd_client_restrictions = reject_rbl_client sbl.spamhaus.org, reject_rbl_client"    >> $mainCf
-echo "blackholes.easynet.nl, reject_rbl_client dnsbl.njabl.org"                             >> $mainCf
-echo "# Recipient Restrictions - Reject - RCPT TO"                                          >> $mainCf
-echo "smtpd_recipient_restrictions = permit_mynetworks, permit_sasl_authenticated,"         >> $mainCf
-echo "reject_non_fqdn_hostname, reject_non_fqdn_sender, reject_non_fqdn_recipient,"         >> $mainCf
-echo "reject_unknown_recipient_domain, reject_unauth_destination,"                          >> $mainCf
-echo "reject_unauth_pipelining, reject_invalid_hostname, check_policy_service"              >> $mainCf
-echo "unix:private/policy-spf, check_policy_service inet:127.0.0.1:10023, permit"           >> $mainCf
-echo "# Reject - DATA"                                                                      >> $mainCf
-echo "smtpd_data_restrictions = reject_unauth_pipelining"                                   >> $mainCf
-echo "# Relay Restrictions - Reject - RCPT TO"                                              >> $mainCf
-echo "smtpd_relay_restrictions = permit_mynetworks, reject_unauth_pipelining,"              >> $mainCf
-echo "permit_sasl_authenticated, reject_non_fqdn_recipient,"                                >> $mainCf
-echo "reject_unknown_recipient_domain, reject_unauth_destination, check_policy_service"     >> $mainCf
-echo "unix:private/policy-spf, check_policy_service inet:127.0.0.1:10023, permit"           >> $mainCf
-echo "# General parameters"                                                                 >> $mainCf
-echo "# -----------------------"                                                            >> $mainCf
-echo "myhostname = lubuntu"                                                                 >> $mainCf
-echo "alias_maps = hash:/etc/aliases"                                                       >> $mainCf
-echo "alias_database = hash:/etc/aliases"                                                   >> $mainCf
-echo "myorigin = /etc/mailname"                                                             >> $mainCf
-echo "mydestination = localhost"                                                            >> $mainCf
-echo "relayhost ="                                                                          >> $mainCf
-echo "mynetworks = 127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128"                            >> $mainCf
-echo "mailbox_size_limit = 0"                                                               >> $mainCf
-echo "recipient_delimiter = +"                                                              >> $mainCf
-echo "inet_interfaces = all"                                                                >> $mainCf
-echo "inet_protocols = all"                                                                 >> $mainCf
-echo "mynetworks_style = host"                                                              >> $mainCf
-echo "message_size_limit = 10240000"                                                        >> $mainCf
-echo "# Dovecot"                                                                            >> $mainCf
-echo "# -----------------------"                                                            >> $mainCf
-echo "virtual_transport = lmtp:unix:private/dovecot-lmtp"                                   >> $mainCf
-echo "# Virtual Mailbox"                                                                    >> $mainCf
-echo "# -----------------------"                                                            >> $mainCf
-echo "virtual_uid_maps = static:5000"                                                       >> $mainCf
-echo "virtual_gid_maps = static:5000"                                                       >> $mainCf
-echo "virtual_mailbox_base = /var/vmail"                                                    >> $mainCf
-echo "virtual_mailbox_domains = mysql:/etc/postfix/mysql-virtual-mailbox-domains.cf"        >> $mainCf
-echo "virtual_mailbox_maps = mysql:/etc/postfix/mysql-virtual-mailbox-maps.cf"              >> $mainCf
-echo "virtual_alias_maps = mysql:/etc/postfix/mysql-virtual-alias-maps.cf"                  >> $mainCf
-echo "queue_directory = /var/spool/postfix"                                                 >> $mainCf
+cat /main.cf                                                    >  $mainCf
 echo "Fin de la modificacion del archivo /etc/postfix/main.cf"
 
 
-### CONFIGURACION DEL MASTER.CF ###
-masterCf = 
+# CONFIGURACION DEL MASTER.CF
+masterCf=/etc/postfix/master.cf
+echo "Cambiando el archivo /etc/postfix/master.cf"
+cat /master.cf                                                    >  $masterCf
+echo "Fin de la modificacion del archivo /etc/postfix/master.cf"
 
-### SET OUR DNS SERVER  ###
-sed -i "s/mydestination = \$myhostname, usuario-vmwarevirtualplatform, localhost.localdomain, , localhost/mydestination = \$myhostname, usuario-vmwarevirtualplatform, localhost.localdomain, midominio.icv, localhost/" /etc/postfix/main.cf
-
-
+# COMPROBAR LA CONFIGURACION DE POSTFIX
+echo "Comprobando la configuracion de Postfix"
+postfix check
+echo "Fin de la comprobacion de la configuracion de Postfix"
 
 ############################
 ### DOVECOT CONFIGURATION ##
 ############################
-if [ "$(grep -cw "^disable_plaintext_auth=no" /etc/dovecot/dovecot.conf)" -eq 0 ]; then
-    echo "disable_plaintext_auth=no" >> /etc/dovecot/dovecot.conf
-fi
-if [ "$(grep -cw "^mail_location = mbox:~/mail:INBOX=/var/mail/%u" /etc/dovecot/dovecot.conf)" -eq 0 ]; then
-    echo "mail_location = mbox:~/mail:INBOX=/var/mail/%u" >> /etc/dovecot/dovecot.conf
-fi
 
+### CONFIGURACION CARPETA /ETC/DOVECOT/CONF.D ###
+dovecotConf=/etc/dovecot/conf.d
+
+# CONFIGURACION DEL MASTER.CF
+echo "Cambiando el archivo /etc/dovecot/conf.d/10-auth.conf"
+cat /10-auth.conf                                                    >  $dovecotConf/10-auth.conf
+echo "Fin de la modificacion del archivo /etc/dovecot/conf.d/10-auth.conf"
+
+# CONFIGURACION DEL MASTER.CF
+echo "Cambiando el archivo /etc/dovecot/conf.d/10-mail.conf"
+cat /10-mail.conf                                                    >  $dovecotConf/10-mail.conf
+echo "Fin de la modificacion del archivo /etc/dovecot/conf.d/10-mail.conf"
+
+# CONFIGURACION DEL MASTER.CF
+echo "Cambiando el archivo /etc/dovecot/conf.d/10-master.conf"
+cat /10-master.conf                                                    >  $dovecotConf/10-master.conf
+echo "Fin de la modificacion del archivo /etc/dovecot/conf.d/10-master.conf"
+
+# CONFIGURACION DEL MASTER.CF
+echo "Cambiando el archivo /etc/dovecot/conf.d/10-ssl.conf"
+cat /10-ssl.conf                                                    >  $dovecotConf/10-ssl.conf
+echo "Fin de la modificacion del archivo /etc/dovecot/conf.d/10-ssl.conf"
+
+# CONFIGURACION DEL MASTER.CF
+echo "Cambiando el archivo /etc/dovecot/conf.d/15-lda.conf"
+cat /15-lda.conf                                                    >  $dovecotConf/15-lda.conf
+echo "Fin de la modificacion del archivo /etc/dovecot/conf.d/15-lda.conf"
+
+# CONFIGURACION DEL MASTER.CF
+echo "Cambiando el archivo /etc/dovecot/conf.d/auth-sql.conf.ext"
+cat /auth-sql.conf.ext                                                    >  $dovecotConf/auth-sql.conf.ext
+echo "Fin de la modificacion del archivo /etc/dovecot/conf.d/auth-sql.conf.ext"
+
+### CONFIGURACION CARPETA /ETC/DOVECOT ###
+dovecot=/etc/dovecot
+
+# CONFIGURACION DEL MASTER.CF
+echo "Cambiando el archivo /etc/dovecot/dovecot-sql.conf.ext"
+cat /dovecot-sql.conf.ext                                                    >  $dovecot/dovecot-sql.conf.ext
+echo "Fin de la modificacion del archivo /etc/dovecot/dovecot-sql.conf.ext"
+
+# CONFIGURACION DEL MASTER.CF
+echo "Cambiando el archivo /etc/dovecot/dovecot.conf"
+cat /dovecot.conf                                                    >  $dovecot/dovecot.conf
+echo "Fin de la modificacion del archivo /etc/dovecot/dovecot.conf"
