@@ -206,6 +206,8 @@ echo "Comprobando la configuracion de Postfix"
 postfix check
 echo "Fin de la comprobacion de la configuracion de Postfix"
 
+service postfix restart
+
 ############################
 ### DOVECOT CONFIGURATION ##
 ############################
@@ -255,3 +257,5 @@ echo "Fin de la modificacion del archivo /etc/dovecot/dovecot-sql.conf.ext"
 echo "Cambiando el archivo /etc/dovecot/dovecot.conf"
 cat ./dovecot.conf                                                           >  $dovecot/dovecot.conf
 echo "Fin de la modificacion del archivo /etc/dovecot/dovecot.conf"
+
+service dovecot restart
