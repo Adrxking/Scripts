@@ -58,8 +58,8 @@ echo "Inicio de la configuracion de Bind9"
 namedLocal=/etc/bind/named.conf.local
 dnsAldeagalaDb=/etc/bind/db.aldeagala.icv
 dnsSimpsonsDb=/etc/bind/db.simpsons.icv
-dnsBarriosesamoDb=/etc/bind/db.simpsons.icv
-dnsPicapiedraDb=/etc/bind/db.simpsons.icv
+dnsBarriosesamoDb=/etc/bind/db.barriosesamo.icv
+dnsPicapiedraDb=/etc/bind/db.picapiedra.icv
 
 echo "zone \"aldeagala.icv\" {"                               >  $namedLocal
 echo "  type master;"                                         >> $namedLocal
