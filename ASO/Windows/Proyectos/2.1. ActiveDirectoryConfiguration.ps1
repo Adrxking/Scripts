@@ -16,7 +16,7 @@
         --> 1.6 - Asigna a los usuarios a sus correspondientes grupos de seguridad.
 #>
 
-# Variables
+# VARIABLES
 $dominioFQDN = "farma.lab"
 
 <# 1.1. - INSTALACION ACTIVE DIRECTORY #>

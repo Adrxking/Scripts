@@ -58,6 +58,8 @@ echo "Inicio de la configuracion de Bind9"
 namedLocal=/etc/bind/named.conf.local
 dnsAldeagalaDb=/etc/bind/db.aldeagala.icv
 dnsSimpsonsDb=/etc/bind/db.simpsons.icv
+dnsBarriosesamoDb=/etc/bind/db.simpsons.icv
+dnsPicapiedraDb=/etc/bind/db.simpsons.icv
 
 echo "zone \"aldeagala.icv\" {"                               >  $namedLocal
 echo "  type master;"                                         >> $namedLocal
@@ -69,6 +71,20 @@ echo ""                                                       >> $namedLocal
 echo "zone \"simpsons.icv\" {"                                >> $namedLocal
 echo "  type master;"                                         >> $namedLocal
 echo "  file \"/etc/bind/db.simpsons.icv\";"                  >> $namedLocal
+echo "};"                                                     >> $namedLocal
+
+echo ""                                                       >> $namedLocal
+
+echo "zone \"barriosesamo.icv\" {"                            >> $namedLocal
+echo "  type master;"                                         >> $namedLocal
+echo "  file \"/etc/bind/db.barriosesamo.icv\";"              >> $namedLocal
+echo "};"                                                     >> $namedLocal
+
+echo ""                                                       >> $namedLocal
+
+echo "zone \"picapiedra.icv\" {"                              >> $namedLocal
+echo "  type master;"                                         >> $namedLocal
+echo "  file \"/etc/bind/db.picapiedra.icv\";"                >> $namedLocal
 echo "};"                                                     >> $namedLocal
 
 echo ";"                                                      >  $dnsAldeagalaDb
@@ -98,6 +114,34 @@ echo "@                 IN  NS        dns.simpsons.icv."      >> $dnsSimpsonsDb
 echo "dns               IN  A         10.33.6.3"              >> $dnsSimpsonsDb
 echo "@                 IN  MX  10    correo.simpsons.icv"    >> $dnsSimpsonsDb
 echo "correo            IN  A         10.33.6.3"              >> $dnsSimpsonsDb
+
+echo ";"                                                       >  $dnsBarriosesamoDb
+echo '$TTL    86400'                                           >> $dnsBarriosesamoDb
+echo "@     IN  SOA  dns.barriosesamo.icv.  adrian.  ("        >> $dnsBarriosesamoDb
+echo "                             1   ;  Serial"              >> $dnsBarriosesamoDb
+echo "                        604800   ; Refresh"              >> $dnsBarriosesamoDb
+echo "                         86400   ; Retry"                >> $dnsBarriosesamoDb
+echo "                       2419200   ; Expire"               >> $dnsBarriosesamoDb
+echo "                         86400 ) ; Negative Cache TTL"   >> $dnsBarriosesamoDb
+echo ";"                                                       >> $dnsBarriosesamoDb
+echo "@                 IN  NS        dns.barriosesamo.icv."   >> $dnsBarriosesamoDb
+echo "dns               IN  A         10.33.6.3"               >> $dnsBarriosesamoDb
+echo "@                 IN  MX  10    correo.barriosesamo.icv" >> $dnsBarriosesamoDb
+echo "correo            IN  A         10.33.6.5"               >> $dnsBarriosesamoDb
+
+echo ";"                                                      >  $dnsPicapiedraDb
+echo '$TTL    86400'                                          >> $dnsPicapiedraDb
+echo "@     IN  SOA  dns.picapiedra.icv.  adrian.  ("         >> $dnsPicapiedraDb
+echo "                             1   ;  Serial"             >> $dnsPicapiedraDb
+echo "                        604800   ; Refresh"             >> $dnsPicapiedraDb
+echo "                         86400   ; Retry"               >> $dnsPicapiedraDb
+echo "                       2419200   ; Expire"              >> $dnsPicapiedraDb
+echo "                         86400 ) ; Negative Cache TTL"  >> $dnsPicapiedraDb
+echo ";"                                                      >> $dnsPicapiedraDb
+echo "@                 IN  NS        dns.picapiedra.icv."    >> $dnsPicapiedraDb
+echo "dns               IN  A         10.33.6.3"              >> $dnsPicapiedraDb
+echo "@                 IN  MX  10    correo.picapiedra.icv"  >> $dnsPicapiedraDb
+echo "correo            IN  A         10.33.6.5"              >> $dnsPicapiedraDb
 
 ### REINICIO DEL SERVICIO ###
 service bind9 restart
