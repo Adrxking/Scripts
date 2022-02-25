@@ -18,4 +18,4 @@ Add-Computer -domainname $dominioFQDN
 # Instalamos el Rol de Servicios de dominio de active directory
 Install-WindowsFeature AD-Domain-Services -IncludeManagementTools
 
-Install-ADDSDomainController -DomainName $dominioFQDN -InstallDns -Credential (Get-Credential FARMA\Administrator)
+Install-ADDSDomainController -DomainName $dominioFQDN -InstallDns -Credential (Get-Credential FARMA\Administrador)
