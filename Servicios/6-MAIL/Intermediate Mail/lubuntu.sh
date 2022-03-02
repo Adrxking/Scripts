@@ -98,7 +98,7 @@ echo "                         86400 ) ; Negative Cache TTL"  >> $dnsAldeagalaDb
 echo ";"                                                      >> $dnsAldeagalaDb
 echo "@                 IN  NS        dns.aldeagala.icv."     >> $dnsAldeagalaDb
 echo "dns               IN  A         10.33.6.3"              >> $dnsAldeagalaDb
-echo "@                 IN  MX  10    correo.aldeagala.icv"   >> $dnsAldeagalaDb
+echo "@                 IN  MX  10    correo.aldeagala.icv."  >> $dnsAldeagalaDb
 echo "correo            IN  A         10.33.6.3"              >> $dnsAldeagalaDb
 
 echo ";"                                                      >  $dnsSimpsonsDb
@@ -112,7 +112,7 @@ echo "                         86400 ) ; Negative Cache TTL"  >> $dnsSimpsonsDb
 echo ";"                                                      >> $dnsSimpsonsDb
 echo "@                 IN  NS        dns.simpsons.icv."      >> $dnsSimpsonsDb
 echo "dns               IN  A         10.33.6.3"              >> $dnsSimpsonsDb
-echo "@                 IN  MX  10    correo.simpsons.icv"    >> $dnsSimpsonsDb
+echo "@                 IN  MX  10    correo.simpsons.icv."   >> $dnsSimpsonsDb
 echo "correo            IN  A         10.33.6.3"              >> $dnsSimpsonsDb
 
 echo ";"                                                       >  $dnsBarriosesamoDb
@@ -126,7 +126,7 @@ echo "                         86400 ) ; Negative Cache TTL"   >> $dnsBarriosesa
 echo ";"                                                       >> $dnsBarriosesamoDb
 echo "@                 IN  NS        dns.barriosesamo.icv."   >> $dnsBarriosesamoDb
 echo "dns               IN  A         10.33.6.3"               >> $dnsBarriosesamoDb
-echo "@                 IN  MX  10    correo.barriosesamo.icv" >> $dnsBarriosesamoDb
+echo "@                 IN  MX  10    correo.barriosesamo.icv.">> $dnsBarriosesamoDb
 echo "correo            IN  A         10.33.6.5"               >> $dnsBarriosesamoDb
 
 echo ";"                                                      >  $dnsPicapiedraDb
@@ -140,7 +140,7 @@ echo "                         86400 ) ; Negative Cache TTL"  >> $dnsPicapiedraD
 echo ";"                                                      >> $dnsPicapiedraDb
 echo "@                 IN  NS        dns.picapiedra.icv."    >> $dnsPicapiedraDb
 echo "dns               IN  A         10.33.6.3"              >> $dnsPicapiedraDb
-echo "@                 IN  MX  10    correo.picapiedra.icv"  >> $dnsPicapiedraDb
+echo "@                 IN  MX  10    correo.picapiedra.icv." >> $dnsPicapiedraDb
 echo "correo            IN  A         10.33.6.5"              >> $dnsPicapiedraDb
 
 ### REINICIO DEL SERVICIO ###
