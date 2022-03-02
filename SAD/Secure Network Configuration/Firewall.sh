@@ -101,28 +101,74 @@ echo 'net.ipv4.ip_forward=1'                        > /etc/sysctl.conf
 ###################################################
 echo 'COMIENZO DE LA CONFIGURACION IPTABLES /etc/default/isc-dhcp-server.conf'
 sleep 2
+
+#########------ LIMPIAR IPTABLES -----##############
 iptables --flush 
 
+#########------ ENMASCARAR HACIA INTERNET -----##############
 iptables -t nat -A POSTROUTING -o ens33 -j MASQUERADE
 
-iptables -P INPUT DROP # Dropear todos los paquetes de la tabla input
+#########------ POLITICA DE DROP EVERYTHING POR DEFECTO -----##############
+iptables -P INPUT DROP   # Dropear todos los paquetes de la tabla input
 iptables -P FORWARD DROP # Dropear todos los paquetes de la tabla forward
-iptables -P OUTPUT DROP # Dropear todos los paquetes de la tabla output
+iptables -P OUTPUT DROP  # Dropear todos los paquetes de la tabla output
 
-iptables -A INPUT -i lo -j ACCEPT  # Permitir todos los paquetes a la red local
-iptables -A OUTPUT -o lo -j ACCEPT  # Permitir todos los paquetes desde la red local
+#########------ PERMITIR TODO ENTRE LA RED LOCALHOST -----##############
+iptables -A INPUT -i lo -j ACCEPT  # RED LOCAL -> RED LOCAL 
+iptables -A OUTPUT -o lo -j ACCEPT # RED LOCAL -> RED LOCAL
 
-iptables -A FORWARD -p udp -s 192.168.1.0/24 -o ens33 --dport 53 --sport 1024:65535 -j ACCEPT  # Habilitar DNS
-iptables -A FORWARD -p tcp -s 192.168.1.0/24 -o ens33 -m multiport --dport 80,443 -j ACCEPT  # Habilitar HTTP, HTTPS
+#########------ HABILITAR DHCP -----##############
+iptables -A INPUT -i ens38 -p udp --sport 67 -s 192.168.1.0/24 -j ACCEPT  # RED DMZ   -> FIREWALL
+iptables -A INPUT -i ens36 -p udp --sport 67 -s 192.168.1.0/24 -j ACCEPT  # RED LOCAL -> FIREWALL
+iptables -A OUTPUT -o ens36 -p udp --dport 68 -d 192.168.1.0/24 -j ACCEPT # FIREWALL  -> RED LOCAL
+iptables -A OUTPUT -o ens38 -p udp --dport 68 -d 192.168.1.0/24 -j ACCEPT # FIREWALL  -> RED DMZ
 
-# Make persistent rule of iptables
+#########------ HABILITAR ICMP -----##############
+iptables -A INPUT -i ens33 -p icmp -j ACCEPT    # EXTERIOR     -> RED FIREWALL
+iptables -A OUTPUT -o ens33 -p icmp -j ACCEPT   # RED FIREWALL -> EXTERIOR
+
+iptables -A INPUT -i ens38 -p icmp -s 192.168.2.0/24 -j ACCEPT  # RED DMZ   -> FIREWALL
+iptables -A INPUT -i ens36 -p icmp -s 192.168.1.0/24 -j ACCEPT  # RED LOCAL -> FIREWALL
+iptables -A OUTPUT -o ens36 -p icmp -d 192.168.1.0/24 -j ACCEPT # FIREWALL  -> RED LOCAL
+iptables -A OUTPUT -o ens38 -p icmp -d 192.168.2.0/24 -j ACCEPT # FIREWALL  -> RED DMZ
+
+iptables -A FORWARD -i ens36 -o ens38 -p icmp -j ACCEPT # RED LOCAL -> RED DMZ
+iptables -A FORWARD -i ens38 -o ens36 -p icmp -j ACCEPT # RED DMZ   -> RED LOCAL
+
+iptables -A FORWARD -i ens38 -o ens33 -s 192.168.2.2/32 -p icmp -j ACCEPT # EQUIPO DMZ -> EXTERIOR
+iptables -A FORWARD -i ens33 -o ens38 -d 192.168.2.2/32 -p icmp -j ACCEPT # EXTERIOR -> EQUIPO DMZ
+
+#########------ HABILITAR DNS -----##############
+iptables -A FORWARD -i ens36 -o ens33 -s 192.168.1.2/32 -p udp --dport 53 -j ACCEPT # RED LOCAL -> EXTERIOR
+iptables -A FORWARD -i ens36 -o ens33 -s 0.0.0.0 -p tcp --dport 53 -j ACCEPT        # RED LOCAL -> EXTERIOR
+iptables -A FORWARD -i ens33 -o ens36 -d 192.168.1.2/32 -p udp --sport 53 -j ACCEPT # EXTERIOR  -> RED LOCAL
+iptables -A FORWARD -i ens33 -o ens36 -d 0.0.0.0 -p tcp --sport 53 -j ACCEPT        # EXTERIOR  -> RED LOCAL
+
+iptables -A FORWARD -i ens38 -s 192.168.2.2/32 -o ens36 -d 192.168.1.2/32 -p udp --dport 53 -j ACCEPT # RED DMZ   -> RED LOCAL
+iptables -A FORWARD -i ens36 -s 192.168.1.2/32 -o ens38 -d 192.168.2.2/32 -p udp --sport 53 -j ACCEPT # RED LOCAL -> RED DMZ
+
+#########------ HABILITAR HTTP/HTTPS -----##############
+iptables -A FORWARD -i eth1 -o eth0 -s 192.168.1.0/24 -p tcp -m multiport --dport 80,443 -j ACCEPT    # RED LOCAL -> EXTERIOR
+iptables -A FORWARD -i eth0 -o eth1 -d 192.168.1.0/24 -p tcp -m multiport --sport 80,443 -j ACCEPT    # EXTERIOR  -> RED LOCAL
+
+iptables -A FORWARD -i ens36 -o ens38 -s 192.168.1.0/24 -p tcp -m multiport --dport 80,443 -j ACCEPT  # RED LOCAL -> RED DMZ
+iptables -A FORWARD -i ens38 -o ens36 -d 192.168.1.0/24 -p tcp -m multiport --sport 80,443 -j ACCEPT  # RED DMZ   -> RED LOCAL
+
+iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to 192.168.2.2:80   # EXTERIOR -> EQUIPO DMZ
+iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 443 -j DNAT --to 192.168.2.2:443 # EXTERIOR -> EQUIPO DMZ
+iptables -A FORWARD -i eth2 -o eth0 -s 192.168.2.2/32 -p tcp -m multiport --sport 80, 443 -j ACCEPT # EQUIPO DMZ -> EXTERIOR
+iptables -A FORWARD -i eth0 -o eth2 -d 192.168.2.2/32 -p tcp -m multiport --dport 80, 443 -j ACCEPT # EXTERIOR   -> EQUIPO DMZ
+
+
+###################################################
+#########---- REINICIAR EL SERVICIO ----###########
+###################################################
+
+#########------ REGLAS IPV4 PERSISTENTES -----##############
 iptables-save                                       > /etc/iptables/rules.v4
 echo 'FIN DE LA CONFIGURACION IPTABLES /etc/default/isc-dhcp-server.conf'
 sleep 2
 
-###################################################
-#########--------RELEER SYSCTL-------##############
-###################################################
 sysctl -p /etc/sysctl.conf
 
 service isc-dhcp-server restart
