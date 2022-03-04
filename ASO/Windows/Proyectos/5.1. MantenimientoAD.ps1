@@ -8,9 +8,6 @@
    la carpeta C:\BackupNTDS.
 #>
 
-<# VARIABLES #>
-
-
 <# 1. VERIFICACION DEL CONTROLADOR SEVERO, SCRIPT QUE EJECUTA UN SERVICIO SI ESTÁ PARADO 
    Y COMPRUEBA LAS CARPETAS COMPARTIDA #>
 
@@ -53,7 +50,24 @@ foreach($Folder in $Folders)
 }
 
 <# 2. COMPROBAR ROLES FSMO EN LOS CONTROLADORES DE DOMINIO #>
+Clear-Host
+write-host "Comprobando los roles FSMO en los controladores de dominio..."
+write-host "Resultado:"
+write-host ""
 netdom query fsmo
 
 <# 3. DEFRAGMENTACION Y BACKUP DE LA BD DE AD EN C:\BackupNTDS #>
+Clear-Host
+write-host "Deteniendo el servicio NTDS..."
+Stop-Service NTDS -Force
+write-host "Comenzando la defragmentacion de la BD de Active Directory"
+ntdsutil.exe "activate instance ntds" files "compact to c:\BackupNTDS" quit quit
+write-host "Fin de la defragmentacion de la BD de Active Directory"
 
+write-host "Sustituyendo la BD original por la defragmentada..."
+Copy-Item C:\BackupNTDS\ntds.* C:\Windows\NTDS
+write-host "Reiniciando los logs de la BD..."
+Remove-Item C:\Windows\NTDS\*.log
+
+write-host "Comenzando el servicio NTDS..."
+Start-Service NTDS
