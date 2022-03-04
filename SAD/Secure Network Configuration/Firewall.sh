@@ -1,6 +1,3 @@
-###################################################
-##########----- SCRIPT PARA DHCP -----#############
-###################################################
 #!/bin/bash
 ###################################################
 #####-----Actualizar sistema-----##################
@@ -81,7 +78,7 @@ echo ''                                             >> /etc/dhcp/dhcpd.conf
 echo 'FIN DE LA CONFIGURACION EN /etc/dhcp/dhcpd.conf'
 
 ###################################################
-##--Configuracion /etc/default/isc-dhcp-server--###
+##- Configuracion /etc/default/isc-dhcp-server -###
 ###################################################
 # * IMPORTANTE COMPROBAR CUALES SON LAS INTERFACES * #
 echo 'COMIENZO DE LA CONFIGURACION EN /etc/default/isc-dhcp-server'
@@ -92,12 +89,12 @@ echo INTERFACESv6=""                                >> /etc/default/isc-dhcp-ser
 echo 'FIN DE LA CONFIGURACION EN /etc/default/isc-dhcp-server'
 
 ###################################################
-####----Configuracion /etc/dhcp/sysctl.conf----####
+####--- Configuracion /etc/dhcp/sysctl.conf ---####
 ###################################################
 echo 'net.ipv4.ip_forward=1'                        > /etc/sysctl.conf
 
 ###################################################
-#########------IPTABLES PARA NAT-----##############
+###########-------- IPTABLES -------###############
 ###################################################
 echo 'COMIENZO DE LA CONFIGURACION IPTABLES /etc/default/isc-dhcp-server.conf'
 sleep 2
@@ -178,7 +175,3 @@ sleep 2
 service isc-dhcp-server status
 
 echo 'TODO LISTO!'
-
-###################################################
-########----- FIN SCRIPT PARA DHCP -----###########
-###################################################
