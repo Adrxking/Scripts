@@ -114,6 +114,7 @@ dnsAldeagalaDb=/etc/bind/db.aldeagala.icv
 dnsSimpsonsDb=/etc/bind/db.simpsons.icv
 dnsBarriosesamoDb=/etc/bind/db.barriosesamo.icv
 dnsPicapiedraDb=/etc/bind/db.picapiedra.icv
+dnsWebmailDb=/etc/bind/db.webmail.icv
 
 echo "zone \"aldeagala.icv\" {"                               >  $namedLocal
 echo "  type master;"                                         >> $namedLocal
@@ -139,6 +140,13 @@ echo ""                                                       >> $namedLocal
 echo "zone \"picapiedra.icv\" {"                              >> $namedLocal
 echo "  type master;"                                         >> $namedLocal
 echo "  file \"/etc/bind/db.picapiedra.icv\";"                >> $namedLocal
+echo "};"                                                     >> $namedLocal
+
+echo ""                                                       >> $namedLocal
+
+echo "zone \"webmail.icv\" {"                                 >> $namedLocal
+echo "  type master;"                                         >> $namedLocal
+echo "  file \"/etc/bind/db.webmail.icv\";"                   >> $namedLocal
 echo "};"                                                     >> $namedLocal
 
 echo ";"                                                      >  $dnsAldeagalaDb
@@ -197,6 +205,20 @@ echo "dns               IN  A         10.33.6.3"              >> $dnsPicapiedraD
 echo "@                 IN  MX  10    correo.picapiedra.icv." >> $dnsPicapiedraDb
 echo "correo            IN  A         10.33.6.5"              >> $dnsPicapiedraDb
 
+echo ";"                                                      >  $dnsWebmailDb
+echo '$TTL    86400'                                          >> $dnsWebmailDb
+echo "@     IN  SOA  dns.picapiedra.icv.  adrian.  ("         >> $dnsWebmailDb
+echo "                             1   ;  Serial"             >> $dnsWebmailDb
+echo "                        604800   ; Refresh"             >> $dnsWebmailDb
+echo "                         86400   ; Retry"               >> $dnsWebmailDb
+echo "                       2419200   ; Expire"              >> $dnsWebmailDb
+echo "                         86400 ) ; Negative Cache TTL"  >> $dnsWebmailDb
+echo ";"                                                      >> $dnsWebmailDb
+echo "@                 IN  NS        dns.picapiedra.icv."    >> $dnsWebmailDb
+echo "dns               IN  A         10.33.6.3"              >> $dnsWebmailDb
+echo "lubuntu           IN  A         10.33.6.3"              >> $dnsWebmailDb
+echo "windows           IN  A         10.33.6.3"              >> $dnsWebmailDb
+
 ### REINICIO DEL SERVICIO ###
 service bind9 restart
 
@@ -205,33 +227,56 @@ echo "Fin de la configuración de bind9"
 ############################
 ### CONFIGURACION DE PHP ###
 ############################
-
-# | VARIABLES | #
-webDir=/var/www/html
-# | FIN VARIABLES | #
-
-
 sed -i "s/;date.timezone =/date.timezone = Europe\/Madrid/" /etc/php/7.4/apache2/php.ini
 
-echo "<?php"            >  $webDir/index.php
-echo "  phpinfo();"     >> $webDir/index.php
-echo "?>"               >> $webDir/index.php
+############################
+### CONFIGURACION APACHE ###
+############################
+# | VARIABLES | #
+webDirLubuntu=/var/www/lubuntu
+webDirWindows=/var/www/windows
+apache2Conf=/etc/apache2/apache2.conf
+sitesAvailable=/etc/apache2/sites-available
+# | FIN VARIABLES | #
 
-# Descargar roundcube y descomprimir en /var/www/html
+if ! [ -d $webDirLubuntu ]; then
+    mkdir -p $webDirLubuntu
+fi
 
-chown www-data:www-data -R $webDir
+if ! [ -d $webDirWindows ]; then
+    mkdir -p $webDirWindows
+fi
+
+################################
+###- CREAR LOS VIRTUALHOST --###
+################################
+# Crear el virtual host de windows
+echo "<VirtualHost 10.33.6.3:80>"                           >  $sitesAvailable/windows.conf
+echo "  ServerName windows.webmail.icv"                     >> $sitesAvailable/windows.conf
+echo "  DocumentRoot $webDirWindows"                        >> $sitesAvailable/windows.conf
+echo "  <Directory $webDirWindows>"                         >> $sitesAvailable/windows.conf
+echo "      DirectoryIndex index.php"                       >> $sitesAvailable/windows.conf
+echo "      Options FollowSymLinks Multiviews"              >> $sitesAvailable/windows.conf
+echo "  </Directory>"                                       >> $sitesAvailable/windows.conf
+echo "</VirtualHost>"                                       >> $sitesAvailable/windows.conf
+
+# Crear el virtual host de lubuntu
+echo "<VirtualHost 10.33.6.3:80>"                           >  $sitesAvailable/lubuntu.conf
+echo "  ServerName lubuntu.webmail.icv"                     >> $sitesAvailable/lubuntu.conf
+echo "  DocumentRoot $webDirLubuntu"                        >> $sitesAvailable/lubuntu.conf
+echo "  <Directory $webDirLubuntu>"                         >> $sitesAvailable/lubuntu.conf
+echo "      DirectoryIndex index.php"                       >> $sitesAvailable/lubuntu.conf
+echo "      Options FollowSymLinks Multiviews"              >> $sitesAvailable/lubuntu.conf
+echo "  </Directory>"                                       >> $sitesAvailable/lubuntu.conf
+echo "</VirtualHost>"                                       >> $sitesAvailable/lubuntu.conf
+
+# Habilitar los sitios
+a2ensite lubuntu.conf windows.conf
 
 ############################
 ### CONFIGURACION MARIADB ##
 ############################
 mysql -u root < mysql.sql
 
-############################
-# CONFIGURACION ROUNDCUBE ##
-############################
-cp config.inc.php $web_dir/config/
-
-############################
-### REINICIO DE SERVICIOS ##
-############################
-service apache2 restart
+# Descargar roundcube y descomprimir en /var/www/html/lubuntu
+# Descargar roundcube y descomprimir en /var/www/html/windows

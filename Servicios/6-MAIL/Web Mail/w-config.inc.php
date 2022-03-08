@@ -6,12 +6,12 @@
 // ----------------------------------
 // SQL DATABASE
 // ----------------------------------
-$config['db_dsnw'] = 'mysql://roundcube:usuario@localhost/roundcube';
+$config['db_dsnw'] = 'mysql://roundcube:usuario@localhost/roundcubew';
 
 // ----------------------------------
 // IMAP
 // ----------------------------------
-$config['default_host'] = 'ssl://10.33.6.3';
+$config['default_host'] = 'ssl://10.33.6.5';
 
 // TCP port used for IMAP connections
 $config['default_port'] = 993;
@@ -32,7 +32,7 @@ $config['smtp_conn_options'] = array(
 // ----------------------------------
 // SMTP
 // ----------------------------------
-$config['smtp_server'] = 'tls://10.33.6.3';
+$config['smtp_server'] = 'tls://10.33.6.5';
 
 $config['support_url'] = '';
 
