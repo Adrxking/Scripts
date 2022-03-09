@@ -83,7 +83,7 @@ echo 'FIN DE LA CONFIGURACION EN /etc/dhcp/dhcpd.conf'
 # * IMPORTANTE COMPROBAR CUALES SON LAS INTERFACES * #
 echo 'COMIENZO DE LA CONFIGURACION EN /etc/default/isc-dhcp-server'
 
-echo INTERFACESv4="ens33 ens36 ens38"               >  /etc/default/isc-dhcp-server
+echo INTERFACESv4="ens33"                           >  /etc/default/isc-dhcp-server
 echo INTERFACESv6=""                                >> /etc/default/isc-dhcp-server
 
 echo 'FIN DE LA CONFIGURACION EN /etc/default/isc-dhcp-server'
