@@ -19,7 +19,7 @@ function New-Menu {
     )
     
 	<# VARIABLES CON LAS OPCIONES DEL MENU #>
-    $reportInactiveUsers = [ChoiceDescription]::new('&Reporte Usuarios Inactivos', 'Crea un report de los usuarios que llevan inactivos mas de 90 dias')
+    $reportInactiveUsers = [ChoiceDescription]::new('&Log Usuarios Inactivos', 'Crea un report de los usuarios que llevan inactivos mas de 90 dias')
     $disableInactiveUsers = [ChoiceDescription]::new('&Desactivar Usuarios Inactivos', 'Desactivar los usuarios que llevan inactivos mas de 90 dias')
     $checkCPUTemp = [ChoiceDescription]::new('&VOZ: Comprobar Temperatura CPU', 'Comprobar la temperatura de tu CPU asistido con una voz')
     $openStackOverflow = [ChoiceDescription]::new('&NECESITAS AYUDA? Abre StackOverflow', 'Abre StackOverFlow para recibir ayuda')
