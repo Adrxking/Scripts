@@ -19,6 +19,8 @@ echo "chroot_list_file=/etc/vsftpd.chroot_list" >> /etc/vsftpd.conf
 echo "pam_service_name=vsftpd"                  >> /etc/vsftpd.conf
 echo "userlist_enable=YES"                      >> /etc/vsftpd.conf
 echo "tcp_wrappers=YES"                         >> /etc/vsftpd.conf
+echo "pasv_min_port=40000"                      >> /etc/vsftpd.conf
+echo "pasv_max_port=50000"                      >> /etc/vsftpd.conf
 echo "userlist_deny=NO"                         >> /etc/vsftpd.conf
 
 
