@@ -6,14 +6,14 @@
 MYSQLUser=''
 MYSQLPassword=''
 MYSQLRootPassword=''
-DockerComposePath='/docker-compose/nginxproxy/docker-compose.yml'
+DockerComposePath="$HOME/docker-compose/nginxproxy/docker-compose.yml"
 
 ###################################################
 ######----------Installation------------###########
 ###################################################
-mkdir /docker-compose
-mkdir /docker-compose/nginxproxy
-touch /docker-compose/nginxproxy/docker-compose.yml
+mkdir ~/docker-compose
+mkdir ~/docker-compose/nginxproxy
+touch ~/docker-compose/nginxproxy/docker-compose.yml
 
 echo "version: '3'" > $DockerComposePath
 echo "services:" >> $DockerComposePath
@@ -46,9 +46,9 @@ echo "      MYSQL_PASSWORD: \"${MYSQLPassword}\" " >> $DockerComposePath
 echo "    volumes:" >> $DockerComposePath
 echo "      - ./data/mysql:/var/lib/mysql" >> $DockerComposePath
 
-cd /docker-compose/nginxproxy/
+cd ~/docker-compose/nginxproxy/
 
-docker-compose up -d
+docker compose up -d
 
 ###################################################
 ######-------POST-Installation----------###########
