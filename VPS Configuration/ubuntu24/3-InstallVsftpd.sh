@@ -49,12 +49,23 @@ listen_ipv6=NO
 
 # Banner de bienvenida (opcional)
 ftpd_banner=Bienvenido al servicio FTP.
+ssl_enable=YES
+allow_anon_ssl=NO
+force_local_data_ssl=YES
+force_local_logins_ssl=YES
+ssl_tlsv1=YES
+ssl_sslv2=NO
+ssl_sslv3=NO
+rsa_cert_file=/etc/ssl/private/vsftpd.pem
+rsa_private_key_file=/etc/ssl/private/vsftpd.pem
 EOF
 
 # Crear el archivo de lista de usuarios permitidos, si aún no existe.
 if [ ! -f /etc/vsftpd.userlist ]; then
   touch /etc/vsftpd.userlist
 fi
+
+sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/vsftpd.pem -out /etc/ssl/private/vsftpd.pem
 
 # Asegurar que el archivo tenga los permisos correctos
 chown root:root /etc/vsftpd.userlist
